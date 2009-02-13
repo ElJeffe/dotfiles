@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+
+# Change xterm/sun-cmd titles on startup
+if [[ -t 1 ]]; then
+    case $TERM in
+    sun-cmd)
+	print -Pn "\e]l%~\e\\"
+	;;
+    *xterm*|*rxvt*|(dt|k|E)term)
+	print -Pn "\e]2;%n@%m:%~\a"
+	;;
+    esac
+fi
+
+# Change xterm/sun-cmd titles when changing directories
+chpwd() {
+    [[ -t 1 ]] || return
+    case $TERM in
+    sun-cmd)
+	print -Pn "\e]l%~\e\\"
+	;;
+    *xterm*|*rxvt*|(dt|k|E)term)
+	print -Pn "\e]2;%n@%m:%~\a"
+	;;
+    esac
+}
+

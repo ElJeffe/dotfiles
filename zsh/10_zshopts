@@ -1,0 +1,54 @@
+#!/usr/bin/env zsh
+
+setopt append_history	
+setopt auto_cd
+setopt auto_continue        # send SIGCONT to jobs disowned
+setopt auto_list
+setopt auto_menu            # show menu for completion
+setopt auto_pushd           # cd = pushd
+setopt bang_hist
+setopt complete_aliases     # dont replace alias before completion
+setopt complete_in_word     # we want completion to be done from cursor in word
+setopt correct
+setopt extended_history
+setopt glob
+setopt glob_complete
+setopt hist_ignore_space
+setopt hist_no_functions
+setopt hist_no_store
+setopt hist_reduce_blanks
+setopt hist_save_no_dups
+setopt list_packed	
+setopt long_list_jobs
+setopt mark_dirs
+setopt no_hup               # don't SIGHUP bg cmds on logout
+setopt no_mail_warning      # auto-explained
+setopt nobeep
+setopt nonomatch
+setopt notify               # notify immediately, not on next prompt
+ 
+# Save command line history
+HISTFILE=$HOME/.zhistory
+HISTSIZE=20000
+SAVEHIST=20000
+HIST_EXPIRE_DUPS_FIRST=yes
+HIST_IGNORE_ALL_DUPS=yes
+HIST_FIND_NO_DUPS=yes
+SHARE_HISTORY=yes
+
+# Sensible keybindings
+bindkey -e
+bindkey "ESC[A" history-search-backward
+bindkey "ESC[B" history-search-forward
+
+# Fix <home>, <end> and <delete> keys *sigh*
+bindkey "ESC[7~" beginning-of-line
+bindkey "ESC[4~" end-of-line
+bindkey "ESC[3~" delete-char
+
+# A righteous umask
+umask 002
+
+# I want coredumps, really
+limit coredumpsize 256M
+

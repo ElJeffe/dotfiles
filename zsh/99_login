@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+if [[ -x `which fortune` ]]
+then
+    fortune -a
+fi
+

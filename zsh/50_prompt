@@ -1,0 +1,31 @@
+#!/usr/bin/env zsh
+
+if [[ "$DISPLAY" == ":0.0" ]]
+then
+  HOSTCOLOR=$RED
+else
+  HOSTCOLOR=$BLUE
+fi
+
+case $UID in
+0)
+    USERCOLOR=$RED
+    ;;
+*)
+    USERCOLOR=$GREEN
+    ;;
+esac
+
+PS1="(${USERCOLOR}%n${NORM}@${HOSTCOLOR}%m${NORM})%U%~%u%# "
+
+function precmd
+{
+    if [ $? -ne 0 ]
+    then
+        RPROMPT="[${RED}%T${NORM}]"
+    else
+        RPROMPT="[${GREEN}%T${NORM}]"
+    fi
+}
+
+

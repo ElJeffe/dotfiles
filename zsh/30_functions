@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+
+# Emulate tcsh's run-fg-editor
+run-fg-editor() {
+    zle push-input
+#    BUFFER="fg %$EDITOR:t"
+    BUFFER="fg"
+    zle accept-line
+}
+zle -N run-fg-editor
+bindkey "^Z" run-fg-editor
+
+# Emulate tcsh's backward-delete-word
+tcsh-backward-delete-word () {
+    local WORDCHARS="${WORDCHARS:s#/#}"
+    zle backward-delete-word
+}
+zle -N tcsh-backward-delete-word
+bindkey "^W" tcsh-backward-delete-word
+

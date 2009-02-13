@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+# Change the behaviour of completions
+zstyle ':completion:*' completer _complete _correct _approximate
+zstyle ':completion:*:default' list-colors "$LS_COLORS"
+
+# Needed for the sensible completion of ssh and friends
+hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[0-9]*}%%\ *}%%,*})
+zstyle ':completion:*:hosts' hosts $hosts
+

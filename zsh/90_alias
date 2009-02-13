@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+
+# No spelling correct on cp, mkdir and mv
+alias cp='nocorrect cp'
+alias mkdir='nocorrect mkdir'
+alias mv='nocorrect mv'
+
+# Standard helpful aliases
+alias d='dirs -v'
+alias h='history 24'
+alias j='jobs -l'
+alias reload='source $HOME/.zshrc'
+
+# Implementations of ls vary wildly
+case $OSTYPE in
+linux*)
+    alias ls='ls --color -F'
+    alias ll='ls --color -F -lA'
+    ;;
+solaris*)
+    alias ls='ls -F'
+    alias ll='ls -F -lA'
+    ;;
+*)
+    alias ls='ls -FG'
+    alias ll='ls -FG -lA'
+    ;;
+esac
+
+# List only directories and symbolic links that point to directories
+alias lsd='ls -ld *(-/DN)'
+    
+# Use friendly tools if available
+if [[ -x =bsdtar ]]; then
+    alias tar='bsdtar'
+fi
+
+if [[ -x =lftp ]]; then
+    alias ftp='lftp'
+fi
+
