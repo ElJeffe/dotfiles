@@ -165,6 +165,6 @@ au InsertLeave * :highlight LineNr cterm=NONE gui=NONE
 " goto next error with F5
 map <F5> :cnex<cr>
 
-let loaded_totd = 1
+let loaded_totd = 0
 
 

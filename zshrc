@@ -8,5 +8,3 @@ done
 autoload -U compinit zrecompile
 compinit
 
-do
-
