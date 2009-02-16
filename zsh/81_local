@@ -1,5 +1,5 @@
 export DCM_IP=10.48.31.236
-PATH=$PATH:/home/steelj99/slickedit/bin
+PATH=/home/steelj99/slickedit2009/bin:$PATH:/home/kprovost/tools/bin
 alias run='./run.py $DCM_IP noreboot nosettings noxml'
 alias vncserver='vncserver -dpi 75 -geometry 1600x1150'
-
+export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
