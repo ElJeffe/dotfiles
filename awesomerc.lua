@@ -113,7 +113,7 @@ mysystray = widget({ type = "systray", align = "right" })
 -- cpu widget
 cpuwidget = widget({type="graph", name="cpuwidget", align="right"})
 cpuwidget.height=0.85
-cpuwidget.width=45
+cpuwidget.width=25
 cpuwidget.bg="#333333"
 cpuwidget.border_color="#0a0a0a"
 cpuwidget.grow="left"
