@@ -1,7 +1,12 @@
-export DCM_IP=10.48.31.236
-PATH=/home/steelj99/slickedit2009/bin:$PATH
-alias run='./run.py $DCM_IP noreboot nosettings noxml'
-alias vncserver='vncserver -dpi 75 -geometry 1600x1150'
-export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
-export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
-source /usr/local/bin/ChangeMV -q 4
+#!/usr/bin/zsh
+
+if [[ "$HOSTNAME" == "sabekorlnx05" || "$HOSTNAME" == "sabekorlnx06" ]]
+then
+  export DCM_IP=10.48.31.236
+  PATH=/home/steelj99/slickedit2009/bin:$PATH
+  alias run='./run.py $DCM_IP noreboot nosettings noxml'
+  alias vncserver='vncserver -dpi 75 -geometry 1600x1150'
+  export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
+  export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
+  source /usr/local/bin/ChangeMV -q 4
+fi
