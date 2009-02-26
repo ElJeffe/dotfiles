@@ -5,7 +5,9 @@ then
   export DCM_IP=10.48.31.236
   PATH=/home/steelj99/slickedit2009/bin:$PATH
   alias run='./run.py $DCM_IP noreboot nosettings noxml'
+  alias runr='./run.py $DCM_IP nosettings noxml'
   alias vncserver='vncserver -dpi 75 -geometry 1600x1150'
+  alias k='pkill -9 -f makeflash -u steelj99;pkill -9 -f pretty_make -u steelj99'
   export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   source /usr/local/bin/ChangeMV -q 4
