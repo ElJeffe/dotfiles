@@ -39,7 +39,7 @@ layouts =
 --    "fullscreen",
 --    "spiral",
 --    "dwindle",
---    "floating"
+      "floating"
 }
 
 -- Table of clients that should be set floating. The index may be either
@@ -66,6 +66,70 @@ apptags =
 
 -- Define if we want to use titlebar on all applications.
 use_titlebar = false
+-- }}}
+
+-- {{{ Colors
+-- Background Colors
+bg_normal = '#222222'
+bg_focus = '#285577'
+bg_urgent = '#A10000'
+bg_tabbar = '#333333'
+
+-- Text Colors
+fg_normal = '#888888'
+fg_focus = '#ffffff'
+fg_urgent = '#ffffff'
+
+-- Border Colors/Width
+border_normal = '#333333'
+border_focus = '#4C7899'
+border_urgent = '#A10000'
+
+-- Set default colors
+awesome.colors_set({ fg = fg_normal, bg = bg_normal })
+
+-- }}}
+
+-- {{{ Markup helper functions
+-- Inline markup is a tad ugly, so use these functions
+-- to dynamically create markup.
+function bg(color, text)
+    if color == Nil then
+      print "bg: Color is Nill"
+    end
+    return '<bg color="'..color..'" />'..text
+end
+
+function fg(color, text)
+    if color == Nil then
+      print "fg: Color is Nill"
+    end
+    return '<span color="'..color..'">'..text..'</span>'
+end
+
+function font(font, text)
+    return '<span font_desc="'..font..'">'..text..'</span>'
+end
+
+function title()
+    return '<title />'
+end
+
+function title_normal()
+    return bg(bg_normal, fg(fg_normal, title()))
+end
+
+function title_focus()
+    return bg(bg_focus, fg(fg_focus, title()))
+end
+
+function title_urgent()
+    return bg(bg_urgent, fg(fg_urgent, title()))
+end
+
+function heading(text)
+    return fg(fg_focus, text)
+end
 -- }}}
 
 -- {{{ Tags
@@ -114,14 +178,14 @@ mysystray = widget({ type = "systray", align = "right" })
 cpuwidget = widget({type="graph", name="cpuwidget", align="right"})
 cpuwidget.height=0.85
 cpuwidget.width=25
-cpuwidget.bg="#333333"
-cpuwidget.border_color="#0a0a0a"
+cpuwidget.bg="#739ece"
+cpuwidget.border_color="#739ece"
 cpuwidget.grow="left"
 
 cpuwidget:plot_properties_set( "cpu", {
-	fg = "#aec6d8",
-	fg_center = "#285577",
-	fg_end = "#285577",
+	fg = "#d9e2eb",
+	fg_center = "#9cbad6",
+	fg_end = "#94b8e0",
 	vertical_gradient = false
 })
 wicked.register(cpuwidget, wicked.widgets.cpu, '$1', 1, "cpu")
@@ -132,7 +196,7 @@ wicked.register(cpuwidget, wicked.widgets.cpu, '$1', 1, "cpu")
 datewidget = widget({ type = "textbox", name = "datewidget", align="right"})
 wicked.register(datewidget, wicked.widgets.date, "%d.%m %H:%M")
 
--- battery widget
+-- {{{ battery widget 1
 batteries = 1
 
 -- Function to extract charge percentage
@@ -175,7 +239,66 @@ for battery=0, batteries-1 do
    wicked.register(batterygraphwidget, read_battery_life(battery), '$1', 1, 'battery')
 end
 
+-- }}}
 
+-- {{{ Battery state Widget
+
+batterywidget = widget({
+    type = 'textbox',
+    name = 'batterywidget',
+    align = 'right'
+    })
+
+wicked.register(batterywidget, 'function', function (widget, args)
+    local f = io.open('/proc/acpi/battery/BAT0/info')
+    local infocontents = f:read('*all')
+    f:close()
+
+    f = io.open('/proc/acpi/battery/BAT0/state')
+    local statecontents = f:read('*all')
+    f:close()
+
+    local status, _
+    -- Find the full capacity (from info)
+    local full_cap
+    
+    status, _, full_cap = string.find(infocontents, "last full capacity:%s+(%d+).*")
+
+    -- Find the current capacity, state and (dis)charge rate (from state)
+    local state, rate, current_cap
+    
+    status, _, state = string.find(statecontents, "charging state:%s+(%w+)")
+    status, _, rate  = string.find(statecontents, "present rate:%s+(%d+).*")
+    status, _, current_cap = string.find(statecontents, "remaining capacity:%s+(%d+).*")
+
+    local prefix, percent, time
+    percent = current_cap / full_cap * 100
+    if state == "charged" then
+        return "AC: " .. fg("green", "100%")
+    elseif state == "charging" then
+        prefix = "AC: "
+        time = (full_cap - current_cap) / rate
+    elseif state == "discharging" then
+        prefix = "Bat: "
+        time = current_cap / rate
+    end
+
+    time_hour = math.floor(time)
+    time_minute = math.floor((time - time_hour) * 60)
+    
+    percent = math.floor(percent)
+    local percent_string
+    if percent < 25 then
+        percent_string = fg("red", percent .. "%")
+    elseif percent < 50 then
+        percent_string = fg("orange", percent .. "%")
+    else
+        percent_string = fg("green", percent .. "%")
+    end
+
+    return prefix .. percent_string .. " " .. string.format("(%02d:%02d)", time_hour, time_minute)
+end, 2)
+-- }}}
 -- Create a wibox for each screen and add it
 mywibox = {}
 mypromptbox = {}
@@ -221,7 +344,8 @@ for s = 1, screen.count() do
                            -- mytextbox,
                            datewidget,
                            cpuwidget,
-                           batterygraphwidget,
+                           -- batterygraphwidget,
+                           batterywidget,
                            mylayoutbox[s],
                            s == 1 and mysystray or nil }
     mywibox[s].screen = s
@@ -360,6 +484,9 @@ for i = 1, keynumber do
                        end
                    end):add()
 end
+
+-- my keybindings
+keybinding({ modkey },"F2", function() awful.util.spawn("firefox") end):add()
 -- }}}
 
 -- {{{ Hooks
