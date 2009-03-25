@@ -1,6 +1,6 @@
 #!/usr/bin/zsh
 
-if [[ "$HOSTNAME" == "sabekorlnx05" || "$HOSTNAME" == "sabekorlnx06" ]]
+if [[ "$HOST" == "sabekorlnx05" || "$HOST" == "sabekorlnx06" ]]
 then
   export DCM_IP=10.48.31.236
   PATH=/home/steelj99/slickedit2009/bin:$PATH
@@ -11,4 +11,8 @@ then
   export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   source /usr/local/bin/ChangeMV -q 4
+fi
+if [[ "$HOST" == "steelj" ]]
+then
+	export PATH=/opt/slickedit/bin:$PATH
 fi
