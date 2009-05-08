@@ -8,9 +8,11 @@ then
   alias runr='./run.py $DCM_IP nosettings noxml'
   alias vncserver='vncserver -dpi 75 -geometry 1600x1150'
   alias k='pkill -9 -f makeflash -u steelj99;pkill -9 -f pretty_make -u steelj99'
+  alias nk='konsole --script > /dev/null 2>&1 &'
   export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   source /usr/local/bin/ChangeMV -q 4
+
 fi
 if [[ "$HOST" == "steelj" ]]
 then
