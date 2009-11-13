@@ -18,3 +18,9 @@ if [[ "$HOST" == "steelj" ]]
 then
 	export PATH=/opt/slickedit/bin:$PATH
 fi
+if [[ "$HOST" == "lnxemb-kjk-01.cisco.com" ]]
+then
+  alias vncserver='vncserver -geometry 1600x1150'
+fi
+
+
