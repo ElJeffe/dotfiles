@@ -21,6 +21,8 @@ fi
 if [[ "$HOST" == "lnxemb-kjk-01.cisco.com" ]]
 then
   alias vncserver='vncserver -geometry 1600x1150'
+  PATH=$PATH:/export/linuxtools/embedded/tools/denx/eldk/4.2/bin:/export/linuxtools/embedded/tools/denx/eldk/4.2/sbin:/export/linuxtools/embedded/tools/denx/eldk/4.2/usr/bin/:/home/steelj99/bin/Scripts
+  export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
 fi
 
 
