@@ -23,4 +23,5 @@ then
   alias vncserver='vncserver -geometry 1600x1150'
 fi
 
+export DCM_IP=10.48.31.236
 
