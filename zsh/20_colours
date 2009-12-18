@@ -3,7 +3,9 @@
 # Prompt with pretty colours
 
 # change colors dependent on X (white bg) or not 
-if [[ "$DISPLAY" == ""  ]]
+
+DARK_BG=0
+if (( $DARK_BG ))
 then
   BLACK="%{"$'\033[01;30m'"%}"
   GREEN="%{"$'\033[01;32m'"%}"
@@ -13,14 +15,16 @@ then
   CYAN="%{"$'\033[01;36m'"%}"
   BOLD="%{"$'\033[01;39m'"%}"
   NORM="%{"$'\033[00m'"%}"
+  export LS_COLORS='no=00:fi=00:di=00;34:ln=00;36:pi=40;33:so=00;35:do=00;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:'
 else
   BLACK="%{"$'\033[01;30m'"%}"
   GREEN="%{"$'\033[32m'"%}"
-  RED="%{"$'\033[01;31m'"%}"
+  RED="%{"$'\033[31m'"%}"
   YELLOW="%{"$'\033[33m'"%}"
   BLUE="%{"$'\033[34m'"%}"
   CYAN="%{"$'\033[01;36m'"%}"
   BOLD="%{"$'\033[01;39m'"%}"
   NORM="%{"$'\033[00m'"%}"
+  export LS_COLORS='no=00:fi=00:di=00;34:ln=00;36:pi=40;33:so=00;35:do=00;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:'
 fi
 
