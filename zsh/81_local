@@ -11,10 +11,14 @@ then
   export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   source /usr/local/bin/ChangeMV -q 4
-else
-  PATH=/opt/slickedit/bin:$PATH
 fi
 if [[ "$HOST" == "steelj" ]]
 then
 	export PATH=/opt/slickedit/bin:$PATH
+fi
+
+if [[ "$HOST" == "euphoria" ]]
+then
+	export PATH=/opt/slickedit/bin:$PATH
+  export LD_LIBRARY_PATH=/home/jef/projects/Spel/SpelCore
 fi
