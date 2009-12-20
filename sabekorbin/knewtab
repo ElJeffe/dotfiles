@@ -1,0 +1,44 @@
+#!/bin/zsh
+#
+#
+# knewtab -- create a new tab in a konsole window, from the commandline
+#
+# usage: knewtab {tabname} {command line ...}
+# 
+# DESCRIPTION
+# 
+# Creates a new tab in a "konsole" window (the current window, or a new
+# one if the command is not run from a konsole).
+# 
+# Requires that the konsole app be run with the "--script" switch.
+# 
+# AUTHOR
+# 
+# Justin Mason, http://taint.org/
+
+name="$1"; shift
+cmd="$*"
+
+if [ "$name" = "" ] ; then
+  head -18 $0 1>&2
+  exit 1
+fi
+
+echo -n "Creating new konsole tab called '$name', running '$cmd' "
+if [ "${KONSOLE_DCOP:-}" != "" ] ; then
+  konsole=$(echo "${KONSOLE_DCOP:-}" | sed -e 's/DCOPRef(\(.*\),.*/\1/')
+  echo "in current konsole"
+else
+  konsole=$(dcopstart konsole-script --script)
+  echo "in new konsole"
+fi
+
+session=$(dcop $konsole konsole newSession)
+if [ "$session" = "" ] ; then
+  echo "'dcop $konsole konsole newSession' failed, exiting"
+  exit 1
+fi
+
+dcop $konsole $session renameSession $name || exit 1
+dcop $konsole $session sendSession "$cmd" || exit 1
+

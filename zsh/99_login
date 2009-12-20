@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-if [[ -x `which fortune` ]]
+if [[ -x `which fortune 2>/dev/null` ]]
 then
     fortune -a
 fi
