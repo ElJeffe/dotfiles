@@ -19,6 +19,12 @@ if [[ "$HOST" == "steelj" ]]
 then
 	export PATH=/opt/slickedit/bin:$PATH
 fi
+
+if [[ "$HOST" == "euphoria" ]]
+then
+	export PATH=/opt/slickedit/bin:$PATH
+  export LD_LIBRARY_PATH=/home/jef/projects/Spel/SpelCore
+fi
 if [[ "$HOST" == "lnxemb-kjk-01.cisco.com" ]]
 then
   export MIO_IP=10.48.31.238
