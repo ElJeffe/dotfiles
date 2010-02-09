@@ -88,7 +88,7 @@ def main(argv):
     for i in range(len(version)):
       version[i] = int(version[i])
     prev_version = copy.deepcopy(version)
-    if prev_version[3] != 1:
+    if len(prev_version) > 2 and prev_version[3] != 1:
       prev_version[3] = prev_version[3] - 1
     else:
       prev_version = [ prev_version[0], prev_version[1] ]
@@ -107,7 +107,7 @@ def main(argv):
       res = reTrace.search(line)
       if res != None:
         print file, '.'.join(version), startline, res.group(1)
-        f.write('<tr><td><a href="http://sabekorlnx02/cgi-bin/cvsweb.cgi/%s/%s?f=h;ln=1;rev=%s#l%d">%s:%d</a></td><td>%s</td></tr>\n'
+        f.write('<tr><td><a href="http://embedded-kjk.cisco.com/cgi-bin/cvsweb.cgi/%s/%s?f=h;ln=1;rev=%s#l%d">%s:%d</a></td><td>%s</td></tr>\n'
             %(dir, file, '.'.join(version), startline, file, startline, res.group(1)))      
       # match the line number
       res = reLine.search(line)
