@@ -18,7 +18,7 @@ class Version:
       self.v3 = int(splitVersion[2])
       self.v4 = int(splitVersion[3])
 
-  def __init__(self, v1, v2, v3, v4):
+  def __init__(self, v1=0, v2=0, v3=0, v4=0):
     self.v1 = v1
     self.v2 = v2
     self.v3 = v3
@@ -59,12 +59,12 @@ class CvsHist:
     self.fileLoc = fileLoc
     self.user = user
     self.date = date
-    self.version = Version(0,0,0,0)
+    self.version = Version()
     self.version.SetVersion(version)
-    self.prevVersion = Version(0,0,0,0)
+    self.prevVersion = Version()
     splitVersion = version.split(".")
     if self.version.v4 == 1:
-      self.prevVersion = Version(self.version.v1, self.version.v2, 0, 0)
+      self.prevVersion = Version(self.version.v1, self.version.v2)
     if self.version.v4 > 1:
       self.prevVersion = Version(self.version.v1, self.version.v2, self.version.v3, self.version.v4 - 1)
 
@@ -89,13 +89,13 @@ class CvsHist:
     return cmp(self.version, other.version)
     
   def cmpUser(self, other):
-    res1 = cmp(self.user + self.file, self.user + other.file)
+    res1 = cmp(self.user + self.file, other.user + other.file)
     if res1 != 0:
       return res1
     return cmp(self.version, other.version)
         
   def cmpDate(self, other):
-    res1 = cmp(self.date + self.file, self.date + other.file)
+    res1 = cmp(self.date + self.file, other.date + other.file)
     if res1 != 0:
       return res1
     return cmp(self.version, other.version)
@@ -141,6 +141,7 @@ def main(argv):
       if not arg in sortArgs:
         usage()
         sys.exit()
+      sortArg = arg
 
 
 
@@ -170,9 +171,6 @@ def main(argv):
 
   # sort
   History.sort(lambda x, y: x.cmpUser(y))
-
-  for hist in History:
-    print "%s \t %s \t %s"%(hist.file, hist.prevVersion, hist.version)
 
   # merge
   MergedHist = []
