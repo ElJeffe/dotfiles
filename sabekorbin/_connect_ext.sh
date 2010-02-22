@@ -66,15 +66,17 @@ if [ $konsole_version == 1 ]; then
   #dcop $konsole $session sendSession "source /app/init"
   #dcop $konsole $session sendSession "history -r /app/histCmds"
 elif [ $konsole_version == 2 ]; then
-#  ssh root@$ip -p $port "$init_cmd"
-#  ssh root@$ip -p $port "rm ~/.bash_profile; echo \"LS_COLORS='no=00:fi=00:di=00;34:ln=00;36:pi=40;33:so=00;35:do=00;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:'
-#export LS_COLORS
-#alias ls='ls --color=auto -F'
-#alias s='/app/startdcm'
-#alias k='/app/killdcm'
-#touch /app/once
-#cd /app\" > ~/.bash_profile;
-#echo 'tcpdump -i eth2 -w /app/tcpdump.cap -s0 port 5003' >> ~/.bash_history
-#echo 'tail -fn1000 /var/log/$logfile' >> ~/.bash_history"
-  ssh root@$ip -p $port
+  # create a new session
+  session_num=$(qdbus org.kde.konsole /Konsole newSession)
+  sleep 0.5
+  # set title
+  qdbus org.kde.konsole /Sessions/$session_num setTitle 0 "$title"
+  sleep 0.1
+  qdbus org.kde.konsole /Sessions/$session_num setTitle 1 "$title"
+  sleep 0.1
+  # send command
+  qdbus org.kde.konsole /Sessions/$session_num sendText "ssh root@$ip -p $port;exit"
+  sleep 0.1
+  qdbus org.kde.konsole /Sessions/$session_num sendText $'\n'
+
 fi;
