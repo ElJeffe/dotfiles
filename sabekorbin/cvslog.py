@@ -1,13 +1,19 @@
-#!/usr/bin/env python
-# find files, search for tabs
+#!/usr/bin/python
+# Compile a HTML file with changes made in CVS by a certian uder during a certain time.
+#
+# History:
+# - 2010/02/19: STEELJ  - Initial Version
  
-import string, os, copy, sys, re, getopt
+import string, os, copy, sys, re, getopt, getpass, subprocess
 
 defaultFile = "cvslog.html"
 cvsServer = "http://embedded-kjk.cisco.com/cgi-bin/cvsweb.cgi/"
-sortArgs = ["user", "date", "file"]
 
+##
+# Version class
+# this class will contain a CVS revision with comparsion methods and helper methods
 class Version:
+  ## Set a version from a string
   def SetVersion(self, versionString):
     splitVersion = versionString.split(".")
     self.v1 = int(splitVersion[0])
@@ -18,12 +24,22 @@ class Version:
       self.v3 = int(splitVersion[2])
       self.v4 = int(splitVersion[3])
 
+  ## get the previous CVS version
+  def GetPrevVersion(self):
+    if self.v4 == 1:
+      return Version(self.v1, self.v2)
+    if self.v4 > 1:
+      return Version(self.v1, self.v2, self.v3, self.v4 - 1)
+    return Version()
+
+  ## init
   def __init__(self, v1=0, v2=0, v3=0, v4=0):
     self.v1 = v1
     self.v2 = v2
     self.v3 = v3
     self.v4 = v4
 
+  ## compare two versions
   def __cmp__(self, other):
     if self.v1 < other.v1:
       return -1
@@ -44,84 +60,117 @@ class Version:
     else:
       return 0
 
-  def __eq_(self, other):
+  ## compare two versions
+  def __eq__(self, other):
     return (self.v1 == other.v1) and (self.v2 == other.v2) and (self.v3 == other.v3) and (self.v4 == other.v4)
 
+  ## write the versionto a string
   def __str__(self):
     if self.v4 > 0:
       return "%s.%s.%s.%s"%(self.v1, self.v2, self.v3, self.v4)
     else:
       return "%s.%s"%(self.v1, self.v2)
 
-class CvsHist:
-  def __init__(self, file, fileLoc, user, date, version):
-    self.file = file
-    self.fileLoc = fileLoc
-    self.user = user
-    self.date = date
-    self.version = Version()
-    self.version.SetVersion(version)
-    self.prevVersion = Version()
-    splitVersion = version.split(".")
-    if self.version.v4 == 1:
-      self.prevVersion = Version(self.version.v1, self.version.v2)
-    if self.version.v4 > 1:
-      self.prevVersion = Version(self.version.v1, self.version.v2, self.version.v3, self.version.v4 - 1)
+## CvsFile class
+# contains information about a file in CVS
+class CvsFile:
+  ## init
+  def __init__(self):
+    self.file = ""
+    self.workingFile = ""
+    self.head = Version()
+    self.revisions = []
 
-  def ToHtml(self, printUser = False):
-    if self.prevVersion.v1 == 0:
-      return ""
-    baseAddr = "%s%s/%s"%(cvsServer, self.fileLoc, self.file)
-    res = "<tr>"
-    if printUser:
-      res = res + "<td>%s</td><td>" %(self.user)
-    res = res + "<td>%s</td><td>" %(self.date)
-    res = res + "<a href=\"%s?rev=%s\">%s</a>" %(baseAddr, self.version, self.file)
-    res = res + "</td><td>"
-    res = res + "<a href=\"%s.diff?r1=%s;r2=%s;f=H\">Diff %s - %s</a></td></tr>" %(baseAddr, self.prevVersion, self.version, self.prevVersion, self.version)
-    res = res + "\n"
-    return res
+## CvsRev class
+# contains information about a CVS revision of a file
+class CvsRev:
+  ## init
+  def __init__(self):
+    self.revision = Version()
+    self.date = ""
+    self.author = ""
+    self.comment = ""
 
-  def cmpFile(self, other):
-    res1 = cmp(self.file, other.file)
-    if res1 != 0:
-      return res1
-    return cmp(self.version, other.version)
-    
-  def cmpUser(self, other):
-    res1 = cmp(self.user + self.file, other.user + other.file)
-    if res1 != 0:
-      return res1
-    return cmp(self.version, other.version)
-        
+## CvsEntry class
+# contains information about a CvsEntry
+# basically, it is a CvsFile + CvsRev
+class CvsEntry:
+  ## init
+  def __init__(self, cvsFile, cvsRev):
+    self.cvsFile = cvsFile
+    self.cvsRev = cvsRev
+    self.prevRev = cvsRev.revision.GetPrevVersion()
+
+  ## compare two CvsEntries on date
   def cmpDate(self, other):
-    res1 = cmp(self.date + self.file, other.date + other.file)
-    if res1 != 0:
-      return res1
-    return cmp(self.version, other.version)
-            
+    res = cmp(self.cvsRev.date + self.cvsFile.workingFile, other.cvsRev.date + other.cvsFile.workingFile)
+    if res != 0:
+      return res
+    return cmp(self.cvsRev.revision, other.cvsRev.revision)
 
+  ## compare two CvsEntries on file and revision
+  def cmpFile(self, other):
+    res = cmp(self.cvsFile.workingFile, other.cvsFile.workingFile)
+    if res != 0:
+      return res
+    return cmp(self.cvsRev.revision, other.cvsRev.revision)
+
+
+  ## write a CvsEntry to html
+  def ToHtml(self, style, printUser = False, printComment = False):
+    if self.prevRev.v1 == 0:
+      return "prevrev empty rev: %s prevrev: %s<br>"%(self.cvsRev.revision, self.prevRev)
+    baseAddr = self.cvsFile.file.replace("/home/cvs/db/",cvsServer)
+    res = "<tr class = \"%s\">" % style
+    if printUser:
+      res = res + "<td>%s</td>" %(self.cvsRev.author)
+    res = res + "<td>%s</td><td>" %(self.cvsRev.date)
+    res = res + "<a href=\"%s?rev=%s\">%s</a></td>" %(baseAddr, self.cvsRev.revision, self.cvsFile.workingFile)
+    res = res + "<td><a href=\"%s.diff?r1=%s;r2=%s;f=H\">Diff %s - %s</a></td>" %(baseAddr, self.prevRev, self.cvsRev.revision, self.prevRev, self.cvsRev.revision)
+    if printComment:
+      res = res + "<td>%s</td>" %(self.cvsRev.comment)
+    res = res + "</tr>\n"
+    return res
+            
+## print information about the usage
 def usage():
   parts = sys.argv[0].split('/')
   fn = parts[len(parts) - 1]
+  print "This script will make a log of all changes for files in the current directory and all subdirectories."
+  print "It is however not necessary to be on the correct branch if using the -r option"
   print "Usage:"
-  print fn, " -d date [-u user -o filename -s sort -a]"
-  print "-d, --date: the start date of the changes (i.e. 20080215)"
-  print "-u, --user: the user who has checked in"
-  print "-o, --output: the file to which to log (default ",defaultFile ,")"
-  print "-s, --sort: sort on user, date or file"
+  print fn, " [-d date -r revision -u user -o filename -r revision -a]"
+  print "-d, --date: define a date or a range of dates when the change was commited"
+  print "            since feb 1 2009: -d \"20090201<\""
+  print "            between  feb 1 2009 and feb 3 2009: -d\"20090201<20090203\""
+  print "            for more info: check cvs log documentation (-d)"
+  print "-r: The revision that should match"
+  print "    ie on branch 8.1: -r BRANCH-DCM-Release8-1"
+  print "    since a tag to now: -r date_2010-02-11_192543_DCM-Release8-1:"
+  print "    between tags: -r date_2010-02-09_202608_DCM-Release8-1:date_2010-02-11_192543_DCM-Release8-1"
+  print "    for mor info: check cvs log documentation (-r)"
+  print "-u, --user: the user who has checked in - defaults to the active user"
   print "-a, --all: for all users"
+  print "-o, --output: the file to which to log (default ",defaultFile ,")"
+  print "-m, --mode: Select the mode of the generated file. Options: commit, file, merged"
+  print "            commit: sort on date, witha header for all same CVS commits (default)"
+  print "            file: sort per file"
+  print "            merged: sort per file, but merge commits, if the same user commited succeedingly"
 
 def main(argv):
+  # set defaults
   outputfile = defaultFile
   user = ''
   date = ''
   userCmd = ''
-  all = False
+  allUsers = False
   sortArg = "date"
+  options = ""
+  mode = "commit"
 
+  # get command line arguments
   try:
-    opts, args = getopt.getopt(argv, "hu:d:o:as:", ["help", "user", "date", "output"])
+    opts, args = getopt.getopt(argv, "hu:d:o:ar:m:", ["help", "user", "date", "output", "all", "rev", "mode"])
   except getopt.GetoptError:
     usage()
     sys.exit(2)
@@ -129,83 +178,167 @@ def main(argv):
     if opt in ("-h", "--help"):
       usage()
       sys.exit()
+    elif opt == "-r":
+      options = options + "-r%s "%arg
+
     elif opt in ("-u", "--user"):
       user = arg
     elif opt in ("-d", "--date"):
-      date = arg
+      options = options + "-d \"%s\" "%arg
     elif opt in ("-o", "--output"):
       outputfile = arg
     elif opt in ("-a", "--all"):
-      all = True
-    elif opt in ("-s", "--sort"):
-      if not arg in sortArgs:
+      allUsers = True
+    elif opt in ("-m", "--mode"):
+      if not arg in ["commit", "file", "merged"]:
+        print "wrong mode argument: %s"%arg
         usage()
         sys.exit()
-      sortArg = arg
-
-
-
-  if date == '':
+      mode = arg
+  if options == "":
+    print "At least a date or a revision should be provided"
     usage()
-    sys.exit(2)
+    sys.exit()
 
-  if all:
-    userCmd = '-a'
-  elif len(user) > 0:
-    userCmd = '-u %s' % (user)
-  cmd = "cvs history -c %s -D %s ."%(userCmd, date)
+  if user == "":
+    user = getpass.getuser()
 
-  print "Cmd: %s" % (cmd)
+  cmd = "cvs log -S -N %s ."%(options)
+  #cmd = "cat tmp.txt"
 
+  #define regular expressions
+  reRcsFile = re.compile("RCS file: ([^,]*)")
+  reWorkingFile = re.compile("Working file: (.*)$")
+  reHead = re.compile("head: (.*)$")
+  reRev = re.compile("revision (.*)$")
+  reInfo = re.compile("date: ([^;]*);  author: ([^;]*)")
+  reSep1 = re.compile("(------------------)+")
+  reSep2 = re.compile("(==================)+")
 
-  # write the header
-  f = open(outputfile,'w')
-  f.write('<html><body><table>\n')
-
-  # get all changes
+  # parse the output
+  commentMode = False
 
   History = []
-  for entry in os.popen(cmd).readlines():
-    parts = entry.split()
-    History.append(CvsHist(parts[6], parts[7], parts[4], parts[1], parts[5]))
+  cvsFile = CvsFile()
+  cvsRev = CvsRev()
 
-  # sort
-  History.sort(lambda x, y: x.cmpUser(y))
+  proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  output = proc.communicate()[0]
 
-  # merge
-  MergedHist = []
-  if len(History) > 1:
-    current = History[0]
-    next = History[1]
-    pos = 1
-    while pos < len(History):
-      next = History[pos]
-      if (current.file == next.file) and (current.version == next.prevVersion) and (current.user == next.user):
-        next.prevVersion = current.prevVersion
-        current = next
-      else:
-        MergedHist.append(current)
-        current = next
-      pos = pos + 1
-    MergedHist.append(next)
+  for entry in output.splitlines():
+    if commentMode:
+      match = reSep1.match(entry)
+      if match != None:
+        commentMode = False
+        if  allUsers or cvsRev.author == user:
+          cvsFile.revisions.append(cvsRev)
+        cvsRev = CvsRev()
+        continue
+      match = reSep2.match(entry)
+      if match != None:
+        commentMode = False
+        if  allUsers or cvsRev.author == user:
+          cvsFile.revisions.append(cvsRev)
+        cvsRev = CvsRev()
+        History.append(cvsFile)
+        cvsFile = CvsFile()
+        continue
+      cvsRev.comment = cvsRev.comment + entry
+      continue
 
-  # sort back
-  if sortArg == "file":
-    MergedHist.sort(lambda x, y: x.cmpFile(y))
-  if sortArg == "user":
-    MergedHist.sort(lambda x, y: x.cmpUser(y))
-  if sortArg == "date":
-    MergedHist.sort(lambda x, y: x.cmpDate(y))
+    match = reRcsFile.match(entry)
+    if match != None:
+      cvsFile.file = match.group(1)
+      continue
+    match = reWorkingFile.match(entry)
+    if match != None:
+      cvsFile.workingFile = match.group(1)
+      continue
+    match = reHead.match(entry)
+    if match != None:
+      cvsFile.head.SetVersion(match.group(1))
+      continue
+    match = reRev.match(entry)
+    if match != None:
+      cvsRev.revision.SetVersion(match.group(1))
+      continue
+    match = reInfo.match(entry)
+    if match != None:
+      cvsRev.date = match.group(1)
+      cvsRev.author = match.group(2)
+      commentMode = True
+      continue
 
+  # convert to a flat list, since it is easier to sort
+  HistFlat = []
+  for hist in History:
+    for rev in hist.revisions:
+      HistFlat.append(CvsEntry(hist,rev))
 
-  for hist in MergedHist:
+  printHeader = False
+  printComment = False
+  if mode == "commit":
+    # sort on date
+    HistFlat.sort(lambda x, y: x.cmpDate(y))
+    printHeader = True
+  elif mode == "file":
+    # sort on date
+    HistFlat.sort(lambda x, y: x.cmpFile(y))
+    printComment = True
+  elif mode == "merged":
+    printComment = True
+    # sort on date
+    HistFlat.sort(lambda x, y: x.cmpFile(y))
+    # merge
+    if len(HistFlat) > 1:
+      NewHist = []
+      curItem = HistFlat[0]
+      nextItem = HistFlat[1]
+      pos = 1
+      while pos < len(HistFlat):
+        nextItem = HistFlat[pos]
+        if (curItem.cvsFile.workingFile == nextItem.cvsFile.workingFile
+           and curItem.cvsRev.author == nextItem.cvsRev.author
+           and curItem.cvsRev.revision == nextItem.prevRev):
+          curItem.cvsRev.comment = "%s<br># %s"%(curItem.cvsRev.comment, nextItem.cvsRev.comment)
+          curItem.cvsRev.revision = nextItem.cvsRev.revision
+        else:
+          curItem.cvsRev.comment = "# %s"%(curItem.cvsRev.comment)
+          NewHist.append(curItem)
+          curItem = nextItem
+        pos = pos + 1
+      curItem.cvsRev.comment = "# %s"%(curItem.cvsRev.comment)
+      NewHist.append(curItem)
+      HistFlat = NewHist
 
-    f.write(hist.ToHtml(all))
+  # write to html
+  f = open(outputfile,'w')
+  # define CSS styles
+  styles= ["white", "grey"]
+  f.write("<html>\n")
+  f.write("<style type=\"text/css\">\n")
+  f.write("tr.%s td {\n" % styles[0])
+  f.write("	background-color: #FFFFFF; color: black;\n")
+  f.write(" padding: 0 5 0 5;\n")
+  f.write("}\ntr.%s td {\n"% styles[1])
+  f.write("	background-color: #D8D8D8; color: black;\n")
+  f.write(" padding: 0 5 0 5;\n")
+  f.write("}\n</style>\n")
+  f.write("<body><table cellspacing=\"0\">\n")
+  commentHeader = ""
 
-  
+  styleId = 0
+  for hist in HistFlat:
+    if printHeader and hist.cvsRev.comment != commentHeader:
+      commentHeader = hist.cvsRev.comment
+      f.write("</table>\n<h3>%s</h3>\n<table cellspacing=\"0\">\n"%commentHeader)
+      styleId = 0
+    f.write(hist.ToHtml(styles[styleId], allUsers, printComment))
+    styleId = (styleId + 1) % 2
+
   f.write('</table></body></html>\n')
   f.close()
-  print '\n\n execute "firefox %s" to see the traces'%outputfile
+  print "\nfirefox %s"%outputfile
 
 
 if __name__ == "__main__":
