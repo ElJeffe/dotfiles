@@ -148,7 +148,7 @@ def usage():
   print "    ie on branch 8.1: -r BRANCH-DCM-Release8-1"
   print "    since a tag to now: -r date_2010-02-11_192543_DCM-Release8-1:"
   print "    between tags: -r date_2010-02-09_202608_DCM-Release8-1:date_2010-02-11_192543_DCM-Release8-1"
-  print "    for mor info: check cvs log documentation (-r)"
+  print "    for more info: check cvs log documentation (-r)"
   print "-u, --user: the user who has checked in - defaults to the active user"
   print "-a, --all: for all users"
   print "-o, --output: the file to which to log (default ",defaultFile ,")"
@@ -216,7 +216,6 @@ def main(argv):
   reSep2 = re.compile("(==================)+")
 
   # parse the output
-  commentMode = False
 
   History = []
   cvsFile = CvsFile()
@@ -225,6 +224,7 @@ def main(argv):
   proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   output = proc.communicate()[0]
 
+  commentMode = False
   for entry in output.splitlines():
     if commentMode:
       match = reSep1.match(entry)
