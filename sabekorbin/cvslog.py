@@ -30,6 +30,9 @@ class Version:
       return Version(self.v1, self.v2)
     if self.v4 > 1:
       return Version(self.v1, self.v2, self.v3, self.v4 - 1)
+    if self.v4 == 0 and self.v3 == 0:
+      if self.v2 > 0:
+        return Version(self.v1, self.v2 - 1, 0, 0)
     return Version()
 
   ## init
@@ -124,9 +127,12 @@ class CvsEntry:
     res = "<tr class = \"%s\">" % style
     if printUser:
       res = res + "<td>%s</td>" %(self.cvsRev.author)
-    res = res + "<td>%s</td><td>" %(self.cvsRev.date)
-    res = res + "<a href=\"%s?rev=%s\">%s</a></td>" %(baseAddr, self.cvsRev.revision, self.cvsFile.workingFile)
-    res = res + "<td><a href=\"%s.diff?r1=%s;r2=%s;f=H\">Diff %s - %s</a></td>" %(baseAddr, self.prevRev, self.cvsRev.revision, self.prevRev, self.cvsRev.revision)
+    if self.prevRev.v2 == 0:
+      res = res + "<a href=\"%s?rev=%s\">%s</a></td><td></td>" %(baseAddr, self.cvsRev.revision, self.cvsFile.workingFile)
+    else:
+      res = res + "<td>%s</td><td>" %(self.cvsRev.date)
+      res = res + "<a href=\"%s?rev=%s\">%s</a></td>" %(baseAddr, self.cvsRev.revision, self.cvsFile.workingFile)
+      res = res + "<td><a href=\"%s.diff?r1=%s;r2=%s;f=H\">Diff %s - %s</a></td>" %(baseAddr, self.prevRev, self.cvsRev.revision, self.prevRev, self.cvsRev.revision)
     if printComment:
       res = res + "<td>%s</td>" %(self.cvsRev.comment)
     res = res + "</tr>\n"
