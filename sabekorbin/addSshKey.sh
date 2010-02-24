@@ -1,4 +1,26 @@
 #!/bin/sh
+# Add the public SSH key to a device, so subsequent logins are passwordless
+
+
+usage()
+{
+  echo "Usage:"
+  echo "$0 [DCM] device"
+  echo "DCM: On a DCM, the keyfile is removed after every reboot. By enabling this option,"
+  echo "     the key will be stored permanently on the DCM"
+  echo "device: The IP address or name of the device where the key should be added to"
+}
+
+if [ $# == 0 ]; then
+  usage;
+  exit 1;
+fi
+
+if [ $1 == "-h" ]; then
+  usage;
+  exit 1;
+fi
+
 DCM=0
 if [ $1 == "DCM" ]; then
   echo "permanently adding to DCM"
