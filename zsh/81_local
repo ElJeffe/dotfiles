@@ -24,6 +24,13 @@ then
   alias vncserver='vncserver -geometry 1600x1150'
   PATH=$PATH:/export/linuxtools/embedded/tools/denx/eldk/4.2/bin:/export/linuxtools/embedded/tools/denx/eldk/4.2/sbin:/export/linuxtools/embedded/tools/denx/eldk/4.2/usr/bin/:/home/steelj99/bin/Scripts
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
+  export mcb=10.48.31.163
+  export mio1=10.48.31.238
+  export mio2=10.48.30.188
+  export mvivbi=10.48.30.182
+  export mvc=10.48.30.181
+  export mvi=10.48.30.189
+  source /usr/local/burke/powerpc/environment-setup
 fi
 if [[ "$HOST" == "arch" ]]
 then
