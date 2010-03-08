@@ -1,0 +1,1 @@
+/bin/ls -lA |grep -v CVS | gawk '{if ($9) system("rm -rf "$9);}'
