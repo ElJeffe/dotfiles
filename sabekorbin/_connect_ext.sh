@@ -70,13 +70,13 @@ elif [ $konsole_version == 2 ]; then
   session_num=$(qdbus org.kde.konsole /Konsole newSession)
   sleep 0.5
   # set title
-  qdbus org.kde.konsole /Sessions/$session_num setTitle 0 "$title"
+  qdbus org.kde.konsole /Sessions/$session_num setTitle 0 "$title" >/dev/null
   sleep 0.1
-  qdbus org.kde.konsole /Sessions/$session_num setTitle 1 "$title"
+  qdbus org.kde.konsole /Sessions/$session_num setTitle 1 "$title" >/dev/null
   sleep 0.1
   # send command
-  qdbus org.kde.konsole /Sessions/$session_num sendText "ssh root@$ip -p $port;exit"
+  qdbus org.kde.konsole /Sessions/$session_num sendText "ssh root@$ip -p $port;exit" >/dev/null
   sleep 0.1
-  qdbus org.kde.konsole /Sessions/$session_num sendText $'\n'
+  qdbus org.kde.konsole /Sessions/$session_num sendText $'\n' >/dev/null
 
 fi;
