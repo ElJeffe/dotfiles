@@ -128,10 +128,11 @@ class CvsEntry:
     if printUser:
       res = res + "<td>%s</td>" %(self.cvsRev.author)
     if self.prevRev.v2 == 0:
-      res = res + "<a href=\"%s?rev=%s\">%s</a></td><td></td>" %(baseAddr, self.cvsRev.revision, self.cvsFile.workingFile)
+      res = res + "<td>%s</td>" %(self.cvsRev.date)
+      res = res + "<td><a href=\"%s?rev=%s\">%s</a></td><td></td>" %(baseAddr, self.cvsRev.revision, self.cvsFile.workingFile)
     else:
-      res = res + "<td>%s</td><td>" %(self.cvsRev.date)
-      res = res + "<a href=\"%s?rev=%s\">%s</a></td>" %(baseAddr, self.cvsRev.revision, self.cvsFile.workingFile)
+      res = res + "<td>%s</td>" %(self.cvsRev.date)
+      res = res + "<td><a href=\"%s?rev=%s\">%s</a></td>" %(baseAddr, self.cvsRev.revision, self.cvsFile.workingFile)
       res = res + "<td><a href=\"%s.diff?r1=%s;r2=%s;f=H\">Diff %s - %s</a></td>" %(baseAddr, self.prevRev, self.cvsRev.revision, self.prevRev, self.cvsRev.revision)
     if printComment:
       res = res + "<td>%s</td>" %(self.cvsRev.comment)
