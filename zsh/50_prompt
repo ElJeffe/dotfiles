@@ -13,7 +13,7 @@ function precmd {
     if [ $DCM_IP =~ "10\.48\.(.*)" ]
     then
       #[[ $DCM_IP -regex-match "10.*" ]]
-      P_IP=" DCM:$PR_RED$match$PR_RESET"
+      P_IP=" DCM:$PR_RED$match$PR_RESET_BG"
     else
       P_IP=""
     fi
@@ -77,34 +77,19 @@ setprompt () {
     # Need this, so the prompt will work
     setopt prompt_subst
 
-    # let's load colors into our environment, then set them
-    autoload colors zsh/terminfo
-
-    if [[ "$terminfo[colors]" -gt 7 ]]; then
-        colors
-    fi
-
-
-    for COLOR in RED GREEN YELLOW WHITE BLACK BLUE; do
-        eval PR_$COLOR='%{$fg[${(L)COLOR}]%}'
-        eval PR_BRIGHT_$COLOR='%{$fg_bold[${(L)COLOR}]%}'
-    done
-
-    PR_RESET="%{$reset_color%}"
-
     HOSTCOLOR=$PR_BLUE
     case $UID in
       0)
-        USERCOLOR=$PR_RED
+        USERCOLOR=$PR_BRIGHT_RED
         ;;
       *)
-        USERCOLOR=$PR_GREEN
+        USERCOLOR=$PR_BRIGHT_GREEN
         ;;
     esac
-
+    PR_RESET_BG=$PR_RESET$PR_BG_WHITE$PR_BLACK
     # Finally, let's set the prompt
-    PROMPT='${PATH_COLOR}%U%~%u${PR_RESET}%# '
-    RPROMPT='[%T ${USERCOLOR}%n${PR_RESET}@${HOSTCOLOR}%m${PR_RESET}${P_IP}]'
+    PROMPT='${PR_RESET_BG}${PATH_COLOR}%U%~%u${PR_BLACK}%#${PR_RESET} '
+    RPROMPT='${PR_RESET_BG}[%T ${USERCOLOR}%n${PR_RESET_BG}@${HOSTCOLOR}%m${PR_BLACK}${P_IP}]${PR_RESET}'
 }
 
 setprompt
