@@ -2,29 +2,24 @@
 
 # Prompt with pretty colours
 
-# change colors dependent on X (white bg) or not 
 
-DARK_BG=0
-if (( $DARK_BG ))
-then
-  BLACK="%{"$'\033[01;30m'"%}"
-  GREEN="%{"$'\033[01;32m'"%}"
-  RED="%{"$'\033[01;31m'"%}"
-  YELLOW="%{"$'\033[33m'"%}"
-  BLUE="%{"$'\033[01;34m'"%}"
-  CYAN="%{"$'\033[01;36m'"%}"
-  BOLD="%{"$'\033[01;39m'"%}"
-  NORM="%{"$'\033[00m'"%}"
-  export LS_COLORS='no=00:fi=00:di=00;34:ln=00;36:pi=40;33:so=00;35:do=00;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:'
-else
-  BLACK="%{"$'\033[01;30m'"%}"
-  GREEN="%{"$'\033[32m'"%}"
-  RED="%{"$'\033[31m'"%}"
-  YELLOW="%{"$'\033[33m'"%}"
-  BLUE="%{"$'\033[34m'"%}"
-  CYAN="%{"$'\033[01;36m'"%}"
-  BOLD="%{"$'\033[01;39m'"%}"
-  NORM="%{"$'\033[00m'"%}"
-  export LS_COLORS='no=00:fi=00:di=00;34:ln=00;36:pi=40;33:so=00;35:do=00;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:'
+# let's load colors into our environment, then set them
+autoload colors zsh/terminfo
+
+if [[ "$terminfo[colors]" -gt 7 ]]; then
+    colors
 fi
 
+
+for COLOR in RED GREEN YELLOW WHITE BLACK BLUE; do
+    eval $COLOR='$fg[${(L)COLOR}]'
+    eval BRIGHT_$COLOR='$fg_bold[${(L)COLOR}]'
+    # Prompt colors
+    eval PR_$COLOR='%{$fg[${(L)COLOR}]%}'
+    eval PR_BRIGHT_$COLOR='%{$fg_bold[${(L)COLOR}]%}'
+    eval PR_BG_$COLOR='%{$bg[${(L)COLOR}]%}'
+    eval PR_BG_BRIGHT_$COLOR='%{$bg_bold[${(L)COLOR}]%}'
+done
+
+PR_RESET="%{$reset_color%}"
+export LS_COLORS='no=00:fi=00:di=00;34:ln=00;36:pi=40;33:so=00;35:do=00;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:'

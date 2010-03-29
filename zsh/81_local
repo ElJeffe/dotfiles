@@ -3,10 +3,10 @@
 if [[ "$HOST" == "sabekorlnx05" || "$HOST" == "sabekorlnx06" || "$HOST" == "sabekorlnx07" ]]
 then
   export DCM_IP=10.48.31.236
-  PATH=/home/steelj99/slickedit2009/bin:$PATH
+  PATH=/home/steelj99/slickedit2010/bin:$PATH
   alias run='./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='./run.py $DCM_IP nosettings noxml'
-  alias vncserver='vncserver -dpi 75 -geometry 1600x1150'
+  alias vncserver='vncserver -dpi 75 -geometry 1600x1150 -name '$HOST
   alias k='pkill -9 -f makeflash -u steelj99;pkill -9 -f pretty_make -u steelj99'
   alias nk='konsole --script > /dev/null 2>&1 &'
   export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
@@ -18,6 +18,12 @@ fi
 if [[ "$HOST" == "steelj" ]]
 then
 	export PATH=/opt/slickedit/bin:$PATH
+fi
+
+if [[ "$HOST" == "euphoria" ]]
+then
+	export PATH=/opt/slickedit/bin:$PATH
+  export LD_LIBRARY_PATH=/home/jef/projects/Spel/SpelCore
 fi
 if [[ "$HOST" == "lnxemb-kjk-01.cisco.com" ]]
 then
