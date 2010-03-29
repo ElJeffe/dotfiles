@@ -10,7 +10,10 @@ function precmd {
     fi
 
     # set DCM ip address
-    if [ $DCM_IP =~ "10\.48\.(.*)" ]
+    if [ -z $DCM_IP ]
+    then
+      P_IP=""
+    elif [ $DCM_IP =~ "10\.48\.(.*)" ]
     then
       #[[ $DCM_IP -regex-match "10.*" ]]
       P_IP=" DCM:$PR_RED$match$PR_RESET_BG"
