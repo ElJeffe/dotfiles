@@ -22,7 +22,7 @@ import time
 #MAKEPROG = "make"
 # Comment the previous line and uncomment the next line if you name your pretty-make.py 
 # program 'make', to avoid recursion
-MAKEPROG = "/usr/bin/make -j3"
+MAKEPROG = "/usr/bin/make -j10"
 
 ### Default values for command-line options:
 SCREENWIDTH = 80   # Fallback value, current value is deduced from resize

@@ -1,5 +1,5 @@
 #/bin/zsh
-if pretty_make.py; then
+if pretty_make; then
   echo "Make succeeded"
   flash.sh
 else
