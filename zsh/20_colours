@@ -6,8 +6,10 @@
 # let's load colors into our environment, then set them
 autoload colors zsh/terminfo
 
-if [[ "$terminfo[colors]" -gt 7 ]]; then
-    colors
+if [[ ! -z $terminfo ]]; then
+  if [[ "$terminfo[colors]" -gt 7 ]]; then
+      colors
+  fi
 fi
 
 
