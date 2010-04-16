@@ -5,12 +5,11 @@
 
 # let's load colors into our environment, then set them
 autoload colors zsh/terminfo
+zmodload zsh/terminfo
 
-if [[ ! -z $terminfo ]]; then
   if [[ "$terminfo[colors]" -gt 7 ]]; then
       colors
   fi
-fi
 
 
 for COLOR in RED GREEN YELLOW WHITE BLACK BLUE; do
