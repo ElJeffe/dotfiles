@@ -44,5 +44,7 @@ then
   export DCM_IP=10.48.31.236
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   PATH=/opt/slickedit/bin:$PATH
+  alias run='./run.py $DCM_IP noreboot nosettings noxml'
+  alias runr='./run.py $DCM_IP nosettings noxml'
 fi
 

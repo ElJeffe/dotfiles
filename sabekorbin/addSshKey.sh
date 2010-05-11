@@ -27,8 +27,17 @@ if [ $1 == "DCM" ]; then
   DCM=1
   shift
 fi
+if [ -f ~/.ssh/id_dsa.pub ]
+then
+  pub_key=$( cat ~/.ssh/id_dsa.pub )
+elif [ -f ~/.ssh/id_rsa.pub ]
+then
+  pub_key=$( cat ~/.ssh/id_rsa.pub )
+else
+  echo "could not find RSA or DSA public key"
+  exit 1;
+fi
 
-pub_key=$( cat ~/.ssh/id_dsa.pub )
 cmd="gr=\$(grep \"$pub_key\" ~/.ssh/authorized_keys2)
 if [ -z \"\$gr\" ]; then
   echo \"$pub_key\" >> ~/.ssh/authorized_keys2;"
