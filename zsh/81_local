@@ -29,7 +29,7 @@ if [[ "$HOST" == "lnxemb-kjk-01.cisco.com" ]]
 then
   export MIO_IP=10.48.31.238
   alias vncserver='vncserver -geometry 1600x1150'
-  PATH=$PATH:/export/linuxtools/embedded/tools/denx/eldk/4.2/bin:/export/linuxtools/embedded/tools/denx/eldk/4.2/sbin:/export/linuxtools/embedded/tools/denx/eldk/4.2/usr/bin/:/home/steelj99/bin/Scripts
+  PATH=/home/steelj99/slickedit2010/bin:/home/steelj99/dotfiles/sabekorbin:$PATH:/export/linuxtools/embedded/tools/denx/eldk/4.2/bin:/export/linuxtools/embedded/tools/denx/eldk/4.2/sbin:/export/linuxtools/embedded/tools/denx/eldk/4.2/usr/bin/:/home/steelj99/bin/Scripts
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   export mcb=10.48.31.163
   export mio1=10.48.31.238
