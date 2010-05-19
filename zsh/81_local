@@ -24,6 +24,7 @@ if [[ "$HOST" == "euphoria" ]]
 then
 	export PATH=/opt/slickedit/bin:$PATH
   export LD_LIBRARY_PATH=/home/jef/projects/Spel/SpelCore
+  alias yaourt='yaourt --lightbg'
 fi
 if [[ "$HOST" == "lnxemb-kjk-01.cisco.com" ]]
 then
@@ -39,5 +40,7 @@ then
   PATH=/opt/slickedit/bin:$PATH
   alias run='./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='./run.py $DCM_IP nosettings noxml'
+  alias yaourt='yaourt --lightbg'
+fi
 fi
 
