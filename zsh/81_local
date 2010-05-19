@@ -42,5 +42,4 @@ then
   alias runr='./run.py $DCM_IP nosettings noxml'
   alias yaourt='yaourt --lightbg'
 fi
-fi
 
