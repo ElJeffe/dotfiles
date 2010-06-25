@@ -23,7 +23,7 @@ fi
 if [[ "$HOST" == "euphoria" ]]
 then
 	export PATH=/opt/slickedit/bin:$PATH
-  export LD_LIBRARY_PATH=/home/jef/projects/Spel/SpelCore
+  #export LD_LIBRARY_PATH=/home/jef/projects/Spel/SpelCore
 fi
 if [[ "$HOST" == "lnxemb-kjk-01.cisco.com" ]]
 then
