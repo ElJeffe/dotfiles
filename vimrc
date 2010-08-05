@@ -122,6 +122,7 @@ filetype on
 :nnoremap <silent> <F8> :Tlist <CR>
 set ignorecase
 set nu
+set cursorline
 :vnoremap * y/<C-R>"<CR>
 "set tags=~/Projects/Branch4.0/DCM_IO/Application/tags
 :set foldmethod=manual
