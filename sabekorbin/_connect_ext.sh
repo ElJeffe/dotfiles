@@ -48,7 +48,7 @@ echo 'tcpdump -i eth2 -w /app/tcpdump.cap -s0 port 5003' >> ~/.bash_history
 echo 'tail -fn1000 /var/log/$logfile' >> ~/.bash_history"
 
 # some global stuff
-addSshKey.sh root@$ip -p $port
+#addSshKey.sh root@$ip -p $port
 ssh root@$ip -p $port "$init_cmd" 
 
 # create the tab
