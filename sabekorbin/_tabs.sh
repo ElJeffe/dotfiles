@@ -28,7 +28,6 @@ makeTab()
   cmdList=($@[2,$#])
 
   konsole_version=$( konsole -v| gawk '{if ($1 ~ /Konsole/) print $2;}' )
-  
   if [[ $konsole_version =~ "1.*" ]]; then
     # Find the current console or create a new one
     if [[ "${KONSOLE_DCOP:-}" != "" ]] ; then
@@ -51,31 +50,33 @@ makeTab()
     #sleep 2
     #dcop $konsole $session sendSession "source /app/init"
     #dcop $konsole $session sendSession "history -r /app/histCmds"
-  elif [[ $konsole_version =~ "2\.(.*)\..*" ]]; then
+  elif [[ $konsole_version =~ "2\.(.*).*" ]]; then
     sub_version=$match
     
     # create a new session
-    if [[ $sub_version -lt 5 ]]; then
-      dbus_kons="org.kde.konsole"
-    else
-      findKonsolePid
-      dbus_kons="org.kde.konsole-$konsolePid"
-    fi
-      session_num=$(qdbus $dbus_kons /Konsole newSession)
-      sleep 0.5
-      # set title
-      qdbus $dbus_kons /Sessions/$session_num setTitle 0 "$title" >/dev/null
+#    if [[ $sub_version -lt 5 ]]; then
+#      dbus_kons="org.kde.konsole"
+#    else
+#      findKonsolePid
+#      dbus_kons="org.kde.konsole-$konsolePid"
+#    fi
+    dbus_kons="org.kde.konsole"
+    session_num=$(qdbus $dbus_kons /Konsole newSession)
+    sleep 0.5
+    # set title
+    qdbus $dbus_kons /Sessions/$session_num setTitle 0 "$title" >/dev/null
+    sleep 0.1
+    qdbus $dbus_kons /Sessions/$session_num setTitle 1 "$title" >/dev/null
+    sleep 0.1
+    # send commands
+    for cmd in $cmdList; do
+      qdbus $dbus_kons /Sessions/$session_num sendText "$cmd" >/dev/null
       sleep 0.1
-      qdbus $dbus_kons /Sessions/$session_num setTitle 1 "$title" >/dev/null
+      qdbus $dbus_kons /Sessions/$session_num sendText $'\n' >/dev/null
       sleep 0.1
-      # send commands
-      for cmd in $cmdList; do
-        qdbus $dbus_kons /Sessions/$session_num sendText "$cmd" >/dev/null
-        sleep 0.1
-        qdbus $dbus_kons /Sessions/$session_num sendText $'\n' >/dev/null
-        sleep 0.1
-      done
-      
+    done
+  else
+   echo "unknown version $konsole_version"    
   
   fi;
 }
