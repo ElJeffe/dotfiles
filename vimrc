@@ -168,4 +168,8 @@ map <F5> :cnex<cr>
 
 let loaded_totd = 0
 
+" Fix Term in Screen
+if $TERM == 'screen'
+  set term=xterm
+endif
 
