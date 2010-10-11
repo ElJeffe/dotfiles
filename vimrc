@@ -79,41 +79,6 @@ else
 
 endif " has("autocmd")
 
-" --------------------
-" TagList
-" --------------------
-" F4:  Switch on/off TagList
-nnoremap <silent> <F4> :TlistToggle<CR>
-
-" TagListTagName  - Used for tag names
-highlight MyTagListTagName gui=bold guifg=Black guibg=Orange
-" TagListTagScope - Used for tag scope
-highlight MyTagListTagScope gui=NONE guifg=Blue
-" TagListTitle    - Used for tag titles
-highlight MyTagListTitle gui=bold guifg=DarkRed guibg=LightGray
-" TagListComment  - Used for comments
-highlight MyTagListComment guifg=DarkGreen
-" TagListFileName - Used for filenames
-highlight MyTagListFileName gui=bold guifg=Black guibg=LightBlue
-
-"let Tlist_Ctags_Cmd = $VIM.'/vimfiles/ctags.exe' " location of ctags tool
-let Tlist_Show_One_File = 1 " Displaying tags for only one file~
-let Tlist_Exist_OnlyWindow = 1 " if you are the last, kill yourself
-let Tlist_Use_Right_Window = 1 " split to the right side of the screen
-let Tlist_Sort_Type = "name" " sort by order or name
-let Tlist_Display_Prototype = 1 " do not show prototypes and not tags in the taglist window.
-let Tlist_Compart_Format = 1 " Remove extra information and blank lines from the taglist window.
-let Tlist_GainFocus_On_ToggleOpen = 1 " Jump to taglist window on open.
-let Tlist_Display_Tag_Scope = 1 " Show tag scope next to the tag name.
-let Tlist_Close_On_Select = 1 " Close the taglist window when a file or tag is selected.
-let Tlist_Enable_Fold_Column = 0 " Don't Show the fold indicator column in the taglist window.
-let Tlist_WinWidth = 40
-let Tlist_Ctags_Cmd = 'ctags --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++'
-" very slow, so I disable this
-let Tlist_Process_File_Always = 1 " To use the :TlistShowTag and the :TlistShowPrototype commands without the taglist window and the taglist menu, you should set this variable to 1.
-":TlistShowPrototype [filename] [linenumber] 
-
-
 " STEELJ
 set tabstop=2
 set shiftwidth=2
@@ -124,7 +89,6 @@ set ignorecase
 set nu
 set cursorline
 :vnoremap * y/<C-R>"<CR>
-"set tags=~/Projects/Branch4.0/DCM_IO/Application/tags
 :set foldmethod=manual
 :map + v%zf
 set laststatus=2
@@ -163,9 +127,12 @@ iab /*** /**********************************************************************
 "au InsertEnter * :highlight LineNr ctermfg=15 ctermbg=1<cr>
 au InsertEnter * :highlight LineNr cterm=reverse gui=reverse
 au InsertLeave * :highlight LineNr cterm=NONE gui=NONE
+
 " goto next error with F5
 map <F5> :cnex<cr>
 
+" toggle line wrap with F4
+map <F4> :set nowrap! <cr>
 let loaded_totd = 0
 
 " Fix Term in Screen

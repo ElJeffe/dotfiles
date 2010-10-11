@@ -35,7 +35,7 @@ fi
 if [[ "$HOST" == "arch" ]]
 then
   export DCM_IP=10.50.203.58
-  export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
+  export CVSROOT=:pserver:steelj99@embedded-kjk.cisco.com:/home/cvs/db
   PATH=/opt/slickedit/bin:$PATH
   alias run='./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='./run.py $DCM_IP nosettings noxml'
