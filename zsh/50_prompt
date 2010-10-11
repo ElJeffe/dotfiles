@@ -24,6 +24,13 @@ function precmd {
       else
         P_IP=""
       fi
+    else
+      if [ -z $DCM_IP ]
+      then
+        P_IP=""
+      else
+        P_IP=" $PR_RED$DCM_IP$PR_RESET_BG"
+      fi
     fi
 	
 #	# git
