@@ -21,6 +21,10 @@ function precmd {
       P_IP=""
     fi
 	
+    if [ $MIO_IP ]
+    then
+      P_IP=" $PR_RED${MIO_IP[7,20]}$PR_RESET_BG"
+    fi
 #	# git
 #	git_ps1 () {
 #        if which git > /dev/null; then
