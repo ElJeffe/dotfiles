@@ -10,15 +10,27 @@ function precmd {
     fi
 
     # set DCM ip address
-    if [ -z $DCM_IP ]
+    if [[ $ZSH_VERSION == <5->.<->.<->* ||
+          $ZSH_VERSION == 4.<4->.<->* ||
+          $ZSH_VERSION == 4.<3->.<5->* ]]
     then
-      P_IP=""
-    elif [ $DCM_IP =~ "10\.48\.(.*)" ]
-    then
-      #[[ $DCM_IP -regex-match "10.*" ]]
-      P_IP=" DCM:$PR_RED$match$PR_RESET_BG"
+      if [ -z $DCM_IP ]
+      then
+        P_IP=""
+      elif [ $DCM_IP =~ "10\.50\.(.*)" ]
+      then
+        #[[ $DCM_IP -regex-match "10.*" ]]
+        P_IP=" DCM:$PR_RED$match$PR_RESET_BG"
+      else
+        P_IP=""
+      fi
     else
-      P_IP=""
+      if [ -z $DCM_IP ]
+      then
+        P_IP=""
+      else
+        P_IP=" $PR_RED$DCM_IP$PR_RESET_BG"
+      fi
     fi
 	
     if [ $MIO_IP ]

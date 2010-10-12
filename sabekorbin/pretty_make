@@ -403,7 +403,7 @@ def main():
       first_word = first_word.split('/')[-1]
       first_word = first_word.split('=')[-1]
 
-      if first_word == "sh":
+      if first_word == "libtool":
         if HIDE_LIBTOOL == 1:
           pass
         else:

@@ -2,7 +2,7 @@
 
 if [[ "$HOST" == "sabekorlnx05" || "$HOST" == "sabekorlnx06" || "$HOST" == "sabekorlnx07" ]]
 then
-  export DCM_IP=10.48.31.236
+  export DCM_IP=10.50.203.58
   PATH=/home/steelj99/slickedit2010/bin:$PATH
   alias run='./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='./run.py $DCM_IP nosettings noxml'
@@ -23,7 +23,7 @@ fi
 if [[ "$HOST" == "euphoria" ]]
 then
 	export PATH=/opt/slickedit/bin:$PATH
-  export LD_LIBRARY_PATH=/home/jef/projects/Spel/SpelCore
+  #export LD_LIBRARY_PATH=/home/jef/projects/Spel/SpelCore
 fi
 if [[ "$HOST" == "lnxemb-kjk-01.cisco.com" ]]
 then
@@ -35,8 +35,8 @@ then
 fi
 if [[ "$HOST" == "arch" ]]
 then
-  export DCM_IP=10.48.31.236
-  export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
+  export DCM_IP=10.50.203.58
+  export CVSROOT=:pserver:steelj99@embedded-kjk.cisco.com:/home/cvs/db
   PATH=/opt/slickedit/bin:$PATH
   alias run='./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='./run.py $DCM_IP nosettings noxml'
