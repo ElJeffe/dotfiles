@@ -102,9 +102,10 @@ setprompt () {
         ;;
     esac
     PR_RESET_BG=$PR_RESET$PR_BG_WHITE$PR_BLACK
+    #PR_RESET_BG=$PR_RESET$PR_BLACK
     # Finally, let's set the prompt
     PROMPT='${PR_RESET_BG}${PATH_COLOR}%U%~%u${PR_BLACK}%#${PR_RESET} '
-    RPROMPT='${PR_RESET_BG}[%T ${USERCOLOR}%n${PR_RESET_BG}@${HOSTCOLOR}%m${PR_BLACK}${P_IP}]${PR_RESET}'
+    RPROMPT='${PR_RESET_BG}%T ${USERCOLOR}%n${PR_RESET_BG}@${HOSTCOLOR}%m${PR_BLACK}${P_IP}${PR_RESET}'
 }
 
 setprompt
