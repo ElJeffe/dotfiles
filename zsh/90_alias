@@ -11,7 +11,7 @@ alias h='history 24'
 alias j='jobs -l'
 alias reload='source $HOME/.zshrc'
 alias vi=vim
-alias _=popd
+alias -- -='popd'
 # Implementations of ls vary wildly
 case $OSTYPE in
 linux*)

@@ -9,6 +9,7 @@ then
   alias vncserver='vncserver -dpi 75 -geometry 1600x1150 -name '$HOST
   alias k='pkill -9 -f makeflash -u steelj99;pkill -9 -f pretty_make -u steelj99'
   alias nk='konsole --script > /dev/null 2>&1 &'
+  alias make='make -j8'
   export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   source /usr/local/bin/ChangeMV -q 4
