@@ -132,6 +132,7 @@ au InsertLeave * :highlight LineNr cterm=NONE gui=NONE
 map <F5> :cnex<cr>
 
 " toggle line wrap with F4
+set nowrap
 map <F4> :set nowrap! <cr>
 let loaded_totd = 0
 
