@@ -1,5 +1,9 @@
-ln -s ~/dotfiles/zsh ~/.zsh
-ln -s ~/dotfiles/zshrc ~/.zshrc
-ln -s ~/dotfiles/vim ~/.vim
-ln -s ~/dotfiles/vimrc ~/.vimrc
-ln -s ~/dotfiles/yaourtrc ~/.yaourtrc
+# !/bin/zsh
+
+for name in zsh zshrc vim vimrc yaourtrc gitconfig
+do
+  if [[ ! -a ~/.$name ]]; then
+    echo "create link for $name"
+    ln -s ~/dotfiles/$name ~/.$name
+  fi
+done

@@ -3,14 +3,34 @@
 BASEDIR=/home/steelj99/Projects/checkIdls
 RESULTS_FILE=/tmp/checkIdlResults-$USER
 # Set update to 1, if the code should be updated from CVS
-UPDATE=1
+UPDATE=0
 # set clean to 1, if all checked out code should be deleted at the end
-CLEAN=1
+CLEAN=0
 
 IDL_RESP=steelj99@cisco.com
 DOXY_RESP=pschiepe@cisco.com
-#DOXY_RESP=steelj99@cisco.com
 
+usage()
+{
+  echo "Usage:"
+  echo "$0 [-u -c -i IdlResp -d DoxyResp]"
+  echo "-u: Update the code from CVS"
+  echo "-c: Clean/Delete all code afterwards"
+  echo "-i: send a mail about IDL errors to this address (default: $IDL_RESP)"
+  echo "-d: send a mail about Doxygen errors to this address (default: $DOXY_RESP)"
+}
+
+while getopts uci:d:h option
+do
+  case "$option" in
+    u)  UPDATE=1;;
+    c)  CLEAN=1;;
+    i)  IDL_RESP="$OPTARG";;
+    d)  DOXY_RESP="$OPTARG";;
+    h|?)  usage; exit 1;;
+  esac
+done
+shift $(($OPTIND - 1))
 log()
 {
   echo "$(date +%H:%M:%S) - $@"

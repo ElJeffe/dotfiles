@@ -1,0 +1,13 @@
+#/bin/sh
+
+if [[ $DCM_IP == "10.50.203.58" ]] ; then
+  exit 0
+fi
+
+echo "Do you want to use DCM $DCM_IP?"
+
+read answer
+if [[ $answer == "y" || $answer == "Y" ]] ; then
+  exit 0
+fi
+exit 1

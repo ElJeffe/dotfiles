@@ -1,0 +1,9 @@
+[user]
+	name = Jef Steelant
+	email = jef@steelant.be
+[alias]
+  co = checkout
+[diff]
+  external = git_diff_wrapper
+[pager]
+  diff =
