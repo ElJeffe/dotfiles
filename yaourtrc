@@ -1,5 +1,5 @@
 AURUPGRADE=1
-#COLORMODE="lightbg"
+COLORMODE="lightbg"
 EDITFILES=0
 PACMAN=pacman-color
-YAOURT_COLORS='nb=1;32:installed=1;32:od=1;32:votes=1;32:local=1;32'
+#YAOURT_COLORS='nb=1;32:installed=1;32:od=1;32:votes=1;32:local=1;32'

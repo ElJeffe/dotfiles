@@ -1,1 +1,47 @@
-/bin/ls -lA |grep -v CVS | gawk '{if ($9) system("rm -rf "$9);}'
+#!/bin/zsh
+
+#function ot get the filename from a path
+getFilename()
+{
+  list=(${(s:/:)1})
+  echo $list[$#list]
+}
+
+getDir()
+{
+  list=(${(s:/:)1})
+  len2=$(( $#list - 1 ))
+  res=$list[1]
+  if [[ $len2 -gt 1 ]] then
+    for i in {2..$len2}; do
+      res="$res/$list[$i]"
+    done
+  fi
+  echo $res
+}
+
+#make backups of vpw and vpj files
+backupFiles=()
+for file (**/*.{vpj,vpw}) do
+  backupFiles+=($file)
+done
+
+for file in $backupFiles; do
+  echo "file " $file
+  filename=$(getFilename $file)
+  cp $file /tmp/$filename.bak
+done
+
+# delete all files
+/bin/ls -lA |grep -v CVS | gawk '{if ($8) system("rm -rf "$8);}'
+
+# move backup files back
+for file in $backupFiles; do
+  filename=$(getFilename $file)
+  dirname=$(getDir $file)
+  if [[ ! -d $dirname ]] then
+    echo mkdir $dirname
+    mkdir -p $dirname
+  fi
+  mv /tmp/$filename.bak $file
+done
