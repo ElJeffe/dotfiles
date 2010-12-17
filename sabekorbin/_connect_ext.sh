@@ -37,6 +37,11 @@ else
     port=$((1001+100*$board+50));    
 fi;
 
+# open debug ports if necessary
+if [[ $(ssh $ip -p $port "echo 2>&1" 2>&1) =~ "refused" ]]; then
+  openDcm.sh $ip
+fi
+
 init_cmd="rm ~/.bash_profile; echo \"LS_COLORS='no=00:fi=00:di=00;34:ln=00;36:pi=40;33:so=00;35:do=00;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:'
 export LS_COLORS
 alias ls='ls --color=auto -F'
