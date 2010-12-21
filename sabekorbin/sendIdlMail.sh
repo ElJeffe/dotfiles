@@ -64,7 +64,6 @@ do
   echo "#######################" >> $RESULTS_FILE
   BRANCH=$(head -n1 $BASEDIR/$proj/CVS/Tag)
   echo "Branch: $BRANCH" >> $RESULTS_FILE
-  cat $BASEDIR/$proj/CVS/Tag >> $RESULTS_FILE
   echo " ----------------------" >> $RESULTS_FILE
   cd $BASEDIR/DCM_IDL
   ./checkIfIdlCallsDocumented.py -i . -c $BASEDIR/$proj >> $RESULTS_FILE
@@ -84,9 +83,12 @@ echo "" | mail -s "Doxygen warnings" -a DoxygenWarnings.csv $DOXY_RESP
 
 # remove all checked out code, since otherwise my disk quote is exceeded
 if [[ $CLEAN -ne 0 ]] ; then
+  log "Remove the code"
   for proj in DCM_IDL DCM_IO DCM_MB DCM_TR
   do
     cd $BASEDIR/$proj
     /home/steelj99/bin/clearcvs
   done
 fi
+log "Finished"
+
