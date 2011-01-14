@@ -1,2 +1,2 @@
 #!/bin/bash
-_connect_ext.sh $DCM_IP $@
+checkDcmIp && _connect_ext.sh $DCM_IP $@
