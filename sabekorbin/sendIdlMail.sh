@@ -3,9 +3,9 @@
 BASEDIR=/home/steelj99/Projects/checkIdls
 RESULTS_FILE=/tmp/checkIdlResults-$USER
 # Set update to 1, if the code should be updated from CVS
-UPDATE=0
+UPDATE=1
 # set clean to 1, if all checked out code should be deleted at the end
-CLEAN=0
+CLEAN=1
 
 IDL_RESP=steelj99@cisco.com
 DOXY_RESP=pschiepe@cisco.com
