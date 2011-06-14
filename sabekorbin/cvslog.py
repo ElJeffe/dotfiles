@@ -7,6 +7,11 @@
 import string, os, copy, sys, re, getopt, getpass, subprocess
 
 defaultFile = "cvslog.html"
+codeCollabFile = "codeCollab.xml"
+tracesFile = "traces.txt"
+tracesPattern = "TraceE|LogM|LogExt|OKAY_OR|OpFailed"
+reTrace = re.compile("^\+(.*(%s).*)" % ( tracesPattern) )
+reLineUnified = re.compile("^@@ -[0-9]+,[0-9]+ \+([0-9]+),[0-9]+ @@")
 cvsServer = "http://embedded-kjk.cisco.com/cgi-bin/cvsweb.cgi/"
 
 ##
@@ -138,6 +143,39 @@ class CvsEntry:
       res = res + "<td>%s</td>" %(self.cvsRev.comment)
     res = res + "</tr>\n"
     return res
+  def TocodeCollab(self, review):
+    res = "<addcvsdiffs>"
+    res = res + "<user-diff-arg>-r</user-diff-arg>"
+    res = res + "<user-diff-arg>%s</user-diff-arg>"%self.prevRev
+    res = res + "<user-diff-arg>-r</user-diff-arg>"
+    res = res + "<user-diff-arg>%s</user-diff-arg>"%self.cvsRev.revision
+    res = res + "<user-diff-arg>%s</user-diff-arg>"%self.cvsFile.workingFile
+    res = res + "<review>%s</review>"%review
+    res = res + "</addcvsdiffs>\n"
+    return res
+  def GetTraces(self):
+    baseAddr = self.cvsFile.file.replace("/home/cvs/db/",cvsServer).replace("Attic/", "")
+    res = ""
+    cmd = "cvs diff -uN -r %s -r %s %s" %(self.prevRev, self.cvsRev.revision, self.cvsFile.workingFile)
+    #print "cmd: %s"%cmd
+    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output = proc.communicate()[0]
+    lineNr = 0
+    for line in output.splitlines():
+      resLine = reLineUnified.match(line)
+      if resLine != None:
+        lineNr = int(resLine.group(1)) - 1
+      else:
+        if not line.startswith("-"):
+          lineNr = lineNr + 1
+       
+      reRes = reTrace.match(line)
+      if reRes != None:
+        if res == "":
+          res = "\n#################\n%s\n#################\n" % (self.cvsFile.workingFile)
+        res = res + "%s\n%s?f=h;ln=1;rev=%s#l%d\n\n" % (reRes.group(1), baseAddr, self.cvsRev.revision, lineNr)
+    return res
+
             
 ## print information about the usage
 def usage():
@@ -145,6 +183,7 @@ def usage():
   fn = parts[len(parts) - 1]
   print "This script will make a log of all changes for files in the current directory and all subdirectories."
   print "It is however not necessary to be on the correct branch if using the -r option"
+  print "If the code collaborator is set, a code collaborator file will also be generated that can be used to upload files"
   print "Usage:"
   print fn, " [-d date -r revision -u user -o filename -r revision -a]"
   print "-d, --date: define a date or a range of dates when the change was commited"
@@ -163,6 +202,9 @@ def usage():
   print "            commit: sort on date, witha header for all same CVS commits (default)"
   print "            file: sort per file"
   print "            merged: sort per file, but merge commits, if the same user commited succeedingly"
+  print "--no-traces-file: Disable the generation of a traces file"
+  print "-c, --codecollab: Generate a file for code collaborator. Merge mode will automatically be merged"
+  print "--review: give the code collaborator review to which the changes should be added. Default a new review will be created"
 
 def main(argv):
   # set defaults
@@ -174,10 +216,15 @@ def main(argv):
   sortArg = "date"
   options = ""
   mode = "commit"
+  ccOneReview = True
+  generateTraces = True
+  codeCollab = False
+  review = "last"
+
 
   # get command line arguments
   try:
-    opts, args = getopt.getopt(argv, "hu:d:o:ar:m:", ["help", "user", "date", "output", "all", "rev", "mode"])
+    opts, args = getopt.getopt(argv, "hu:d:o:ar:m:c", ["help", "user=", "date=", "output=", "all", "rev=", "mode", "no-traces-file", "codecollab", "review="])
   except getopt.GetoptError:
     usage()
     sys.exit(2)
@@ -197,19 +244,29 @@ def main(argv):
     elif opt in ("-a", "--all"):
       allUsers = True
     elif opt in ("-m", "--mode"):
+      if codeCollab:
+        continue
       if not arg in ["commit", "file", "merged"]:
         print "wrong mode argument: %s"%arg
         usage()
         sys.exit()
       mode = arg
+    elif opt in ("--no-traces-file"):
+      generateTraces = False
+    elif opt in ("-c", "--codecollab"):
+      mode = "merged"
+      codeCollab = True
+    elif opt in ("--review"):
+      review = arg
   if options == "":
     print "At least a date or a revision should be provided"
     usage()
     sys.exit()
-
+  
   if user == "":
     user = getpass.getuser()
 
+  print "Getting CVS information"
   cmd = "cvs log -S -N %s ."%(options)
   #cmd = "cat tmp.txt"
 
@@ -319,6 +376,7 @@ def main(argv):
       HistFlat = NewHist
 
   # write to html
+  print "Generating cvslog file"
   f = open(outputfile,'w')
   # define CSS styles
   styles= ["white", "grey"]
@@ -345,7 +403,44 @@ def main(argv):
 
   f.write('</table></body></html>\n')
   f.close()
-  print "\nfirefox %s"%outputfile
+
+  print "firefox %s"%outputfile
+
+  #generate the traces file
+  if generateTraces:
+    print "Generating traces file"
+    tf = open(tracesFile, 'w')
+    tf.write("Traces found:")
+    for hist in HistFlat:
+      tf.write(hist.GetTraces())
+    tf.close()
+    print "Traces file: %s" % tracesFile 
+
+  #generate the code colaborator file
+  if (codeCollab):
+    print "Generating code collaborator file"
+    commentHeader = ""
+    ccf = open(codeCollabFile, 'w')
+    # print header
+    ccf.write("<batch-commands><global-options><no-browser/><non-interactive/></global-options>\n")
+    if review == "last":
+        ccf.write("<admin_review_create><title>New review</title></admin_review_create>\n")
+
+    for hist in HistFlat:
+      if not ccOneReview and (hist.cvsRev.comment != commentHeader):
+        commentHeader = hist.cvsRev.comment
+        # create new review
+        ccf.write("<admin_review_create><title>%s</title></admin_review_create>\n"%commentHeader.translate(None,'<>&\n'))
+      ccf.write(hist.TocodeCollab(review))
+    # add the traces file
+    if generateTraces:
+      ccf.write("<addfiles><file-path>%s</file-path><review>%s</review></addfiles>\n"%(tracesFile, review))
+    ccf.write("</batch-commands>")
+    ccf.close()
+    print "Code colaborator file: %s"%codeCollabFile
+    print "Review the xml file and then upload it to code collaborator using:"
+    print "ccollab admin batch %s"%codeCollabFile
+
 
 
 if __name__ == "__main__":
