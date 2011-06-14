@@ -1,13 +1,12 @@
-#/bin/sh
+#/bin/zsh
 
-if [[ $DCM_IP == "10.50.203.58" ]] ; then
+if [[ $DCM_IP == "10.50.203.58" ]]; then
   exit 0
 fi
-
-echo "Do you want to use DCM $DCM_IP?"
-
-read answer
-if [[ $answer == "y" || $answer == "Y" ]] ; then
+echo "Connect to $DCM_IP? [y/N]"
+read -n 1 -s ans
+if [[ $ans == 'y' || $ans == 'Y' ]]; then
   exit 0
+else
+  exit 1
 fi
-exit 1
