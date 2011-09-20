@@ -11,6 +11,9 @@ then
   alias nk='konsole --script > /dev/null 2>&1 &'
   alias make='make -j8'
   alias gdb='ppc_440-gdb'
+  alias vgStrip='ppc_440-objcopy -R .debug_str -R .debug_info -R .debug_macinfo DCM_IO DCM_IO-vg'
+  alias makemfp='make -j8 make CONFIG=build/mfp-default-config'
+  alias makedcm='make -j8 make CONFIG=build/dcm-default-config'
   export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   source /usr/local/bin/ChangeMV -q 4

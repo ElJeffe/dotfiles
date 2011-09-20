@@ -27,30 +27,30 @@ makeTab()
   title=$1
   cmdList=($@[2,$#])
 
-  konsole_version=$( konsole -v| gawk '{if ($1 ~ /Konsole/) print $2;}' )
-  if [[ $konsole_version =~ "1.*" ]]; then
-    # Find the current console or create a new one
-    if [[ "${KONSOLE_DCOP:-}" != "" ]] ; then
-      konsole=$(echo "${KONSOLE_DCOP:-}" | sed -e 's/DCOPRef(\(.*\),.*/\1/')
-    else
-      konsole=$(dcopstart konsole-script --script)
-    fi
-    # Create a new session
-    session=$(dcop $konsole konsole newSession)
-    if [ "$session" = "" ] ; then
-      echo "'dcop $konsole konsole newSession' failed, exiting"
-      exit 1
-    fi
-    
-    dcop $konsole $session renameSession "$title" || exit 1
-    for cmd in $cmdList; do
-      dcop $konsole $session sendSession "$cmd"
-      sleep 0.1
-    done
-    #sleep 2
-    #dcop $konsole $session sendSession "source /app/init"
-    #dcop $konsole $session sendSession "history -r /app/histCmds"
-  elif [[ $konsole_version =~ "2\.(.*).*" ]]; then
+#  konsole_version=$( konsole -v| gawk '{if ($1 ~ /Konsole/) print $2;}' )
+#  if [[ $konsole_version =~ "1.*" ]]; then
+#    # Find the current console or create a new one
+#    if [[ "${KONSOLE_DCOP:-}" != "" ]] ; then
+#      konsole=$(echo "${KONSOLE_DCOP:-}" | sed -e 's/DCOPRef(\(.*\),.*/\1/')
+#    else
+#      konsole=$(dcopstart konsole-script --script)
+#    fi
+#    # Create a new session
+#    session=$(dcop $konsole konsole newSession)
+#    if [ "$session" = "" ] ; then
+#      echo "'dcop $konsole konsole newSession' failed, exiting"
+#      exit 1
+#    fi
+#    
+#    dcop $konsole $session renameSession "$title" || exit 1
+#    for cmd in $cmdList; do
+#      dcop $konsole $session sendSession "$cmd"
+#      sleep 0.1
+#    done
+#    #sleep 2
+#    #dcop $konsole $session sendSession "source /app/init"
+#    #dcop $konsole $session sendSession "history -r /app/histCmds"
+#  elif [[ $konsole_version =~ "2\.(.*).*" ]]; then
     sub_version=$match
     
     # create a new session
@@ -75,9 +75,9 @@ makeTab()
       qdbus $dbus_kons /Sessions/$session_num sendText $'\n' >/dev/null
       sleep 0.1
     done
-  else
-   echo "unknown version $konsole_version"    
-  
-  fi;
+#  else
+#   echo "unknown version $konsole_version"    
+#  
+#  fi;
 }
 
