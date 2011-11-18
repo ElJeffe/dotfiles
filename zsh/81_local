@@ -1,9 +1,9 @@
 #!/usr/bin/zsh
 
-if [[ "$HOST" == "sabekorlnx05" || "$HOST" == "sabekorlnx06" || "$HOST" == "sabekorlnx07" ]]
+if [[ "$HOST" == "lnx-kjk-11" || "$HOST" == "sabekorlnx05" || "$HOST" == "sabekorlnx06" || "$HOST" == "sabekorlnx07" ]]
 then
   export DCM_IP=10.50.203.58
-  PATH=/home/steelj99/slickedit2010/bin:$PATH
+  PATH=/home/steelj99/slickedit2010/bin:/home/steelj99/binlocal:$PATH
   alias run='checkDcmIp && ./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='checkDcmIp && ./run.py $DCM_IP nosettings noxml'
   alias vncserver='vncserver -dpi 75 -geometry 1600x1150 -name '$HOST
@@ -12,8 +12,10 @@ then
   alias make='make -j8'
   alias gdb='ppc_440-gdb'
   alias vgStrip='ppc_440-objcopy -R .debug_str -R .debug_info -R .debug_macinfo DCM_IO DCM_IO-vg'
-  alias makemfp='make -j8 make CONFIG=build/mfp-default-config'
-  alias makedcm='make -j8 make CONFIG=build/dcm-default-config'
+  alias makemfp='make -j8 CONFIG=build/mfp-default-config'
+  alias makedcm='make -j8 CONFIG=build/dcm-default-config'
+  # make all upload
+  alias mau='makemfp upload && makedcm upload'
   export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   source /usr/local/bin/ChangeMV -q 4
