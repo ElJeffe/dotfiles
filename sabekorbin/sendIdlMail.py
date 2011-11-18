@@ -41,14 +41,21 @@ def main(argv):
   branch89.versions.append(Version("DCM_IO", "BRANCH-DCM-Release8-9"))
   branch89.versions.append(Version("DCM_MB", "BRANCH-DCM-Release8-9"))
   branch89.versions.append(Version("DCM_TR", "BRANCH-DCM-Release8-9"))
-  branches.append(branch89)
+  #branches.append(branch89)
 
   branch90 = Branch("Branch90")
   branch90.idlVersion =  Version("DCM_IDL", "HEAD")
   branch90.versions.append(Version("DCM_IO", "BRANCH-DCM-Release9-0"))
   branch90.versions.append(Version("DCM_MB", "BRANCH-DCM-Release9-0"))
-  branch90.versions.append(Version("DCM_TR", "HEAD"))
+  branch90.versions.append(Version("DCM_TR", "BRANCH-DCM-Release9-0"))
   branches.append(branch90)
+  
+  branch910 = Branch("Branch910")
+  branch910.idlVersion =  Version("DCM_IDL", "HEAD")
+  branch910.versions.append(Version("DCM_IO", "BRANCH-DCM-Release9-10"))
+  branch910.versions.append(Version("DCM_MB", "BRANCH-DCM-Release9-10"))
+  branch910.versions.append(Version("DCM_TR", "HEAD"))
+  branches.append(branch910)
   
   if not os.path.isdir(checkoutLocation):
     os.makedirs(checkoutLocation)
