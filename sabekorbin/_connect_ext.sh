@@ -50,6 +50,7 @@ alias k='/app/killdcm'
 touch /app/once
 cd /app\" > ~/.bash_profile;
 echo 'tcpdump -i eth2 -w /app/tcpdump.cap -s0 port 5003' >> ~/.bash_history
+echo 'watch /app/myetime' >> ~/.bash_history
 echo 'rebootdcm -i; watch /app/myetime' >> ~/.bash_history
 echo 'rebootdcm -ci; watch /app/myetime' >> ~/.bash_history
 echo 'tail -fn1000 /var/log/$logfile' >> ~/.bash_history"
