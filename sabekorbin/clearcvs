@@ -33,7 +33,7 @@ for file in $backupFiles; do
 done
 
 # delete all files
-/bin/ls -lA |grep -v CVS | gawk '{if ($8) system("rm -rf "$8);}'
+/bin/ls -lA |grep -v CVS | gawk '{if ($9) system("rm -rf "$9);}'
 
 # move backup files back
 for file in $backupFiles; do

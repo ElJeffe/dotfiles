@@ -40,3 +40,4 @@ if [[ -x =lftp ]]; then
     alias ftp='lftp'
 fi
 
+alias dus='du --max-depth=1 -h |sort -h'
