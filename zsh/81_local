@@ -1,5 +1,7 @@
 #!/usr/bin/zsh
 
+export DCM_IP=
+
 if [[ "$HOST" == "lnx-kjk-11" || "$HOST" == "sabekorlnx05" || "$HOST" == "sabekorlnx06" || "$HOST" == "sabekorlnx07" ]]
 then
   export DCM_IP=10.50.203.58
@@ -53,3 +55,5 @@ then
   alias runr='checkDcmIp && ./run.py $DCM_IP nosettings noxml'
 fi
 
+#export DCM_IP=
+export MY_DCM_IP=$DCM_IP

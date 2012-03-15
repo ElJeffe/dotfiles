@@ -1,6 +1,9 @@
 #/bin/zsh
-
-if [[ $DCM_IP == "10.50.203.58" ]]; then
+if [[ $DCM_IP == "" ]]; then
+  echo "No DCM_IP defined"
+  exit 1
+fi
+if [[ $DCM_IP == $MY_DCM_IP ]]; then
   exit 0
 fi
 echo "Connect to $DCM_IP? [y/N]"
