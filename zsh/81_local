@@ -2,9 +2,19 @@
 
 export DCM_IP=
 
+setDcmIp()
+{
+  DCM_IP_FILE="/home/steelj99/Projects/DCM_IP"
+  if [[ -f $DCM_IP_FILE ]]
+  then
+    export DCM_IP=$(cat $DCM_IP_FILE)
+    export MY_DCM_IP=$DCM_IP
+  fi
+}
+
 if [[ "$HOST" == "lnx-kjk-11" || "$HOST" == "sabekorlnx05" || "$HOST" == "sabekorlnx06" || "$HOST" == "sabekorlnx07" ]]
 then
-  export DCM_IP=10.50.203.58
+  setDcmIp
   PATH=/home/steelj99/slickedit2010/bin:/home/steelj99/binlocal:$PATH
   alias run='checkDcmIp && ./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='checkDcmIp && ./run.py $DCM_IP nosettings noxml'
@@ -48,12 +58,9 @@ then
 fi
 if [[ "$HOST" == "arch" ]]
 then
-  export DCM_IP=10.50.203.58
+  setDcmIp
   export CVSROOT=:pserver:steelj99@embedded-kjk.cisco.com:/home/cvs/db
   PATH=/opt/slickedit/bin:$PATH
   alias run='checkDcmIp && ./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='checkDcmIp && ./run.py $DCM_IP nosettings noxml'
 fi
-
-#export DCM_IP=
-export MY_DCM_IP=$DCM_IP

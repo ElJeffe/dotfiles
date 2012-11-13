@@ -3,7 +3,11 @@
 	email = jef@steelant.be
 [alias]
   co = checkout
-[diff]
-  external = git_diff_wrapper
 [pager]
   diff =
+[giggle]
+	main-window-maximized = true
+	main-window-geometry = 967x774+417+218
+	history-view-vpane-position = 284
+	file-view-vpane-position = 603
+	main-window-view = HistoryView
