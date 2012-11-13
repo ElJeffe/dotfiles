@@ -15,9 +15,9 @@ setDcmIp()
 if [[ "$HOST" == "lnx-kjk-11" || "$HOST" == "sabekorlnx05" || "$HOST" == "sabekorlnx06" || "$HOST" == "sabekorlnx07" ]]
 then
   setDcmIp
-  PATH=/home/steelj99/slickedit2010/bin:/home/steelj99/binlocal:$PATH
-  alias run='checkDcmIp && ./run.py $DCM_IP noreboot nosettings noxml'
-  alias runr='checkDcmIp && ./run.py $DCM_IP nosettings noxml'
+  PATH=/home/steelj99/slickedit17/bin:/home/steelj99/binlocal:$PATH
+  alias runr='echo "Running:\n$(grep "^rt" rtconfig.txt)\nOn $DCM_IP\nPress Enter to continue..." && read && ./run.py $DCM_IP putoncefile nosettings noxml local'
+  alias run='runr noreboot'
   alias vncserver='vncserver -dpi 75 -geometry 1600x1150 -name '$HOST
   alias k='pkill -9 -f makeflash -u steelj99;pkill -9 -f pretty_make -u steelj99'
   alias nk='konsole --script > /dev/null 2>&1 &'
@@ -28,7 +28,6 @@ then
   alias makedcm='make -j8 CONFIG=build/dcm-default-config'
   # make all upload
   alias mau='makemfp upload && makedcm upload'
-  export VSLICK='-supf /home/steelj99/.slickedit/keyremap'
   export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
   source /usr/local/bin/ChangeMV -q 4
   #xmodmap ./.xmodmap
