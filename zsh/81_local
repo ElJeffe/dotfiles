@@ -59,7 +59,9 @@ if [[ "$HOST" == "arch" ]]
 then
   setDcmIp
   export CVSROOT=:pserver:steelj99@embedded-kjk.cisco.com:/home/cvs/db
-  PATH=/opt/slickedit/bin:$PATH
+  PATH=/opt/slickedit/bin:$PATH:$HOME/bin/ServerScripts.git
   alias run='checkDcmIp && ./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='checkDcmIp && ./run.py $DCM_IP nosettings noxml'
+  alias connectLoop='while [ true ]; do ssh $DCM_IP; sleep 5; done'
+  alias rs='setDcm.py; reload'
 fi

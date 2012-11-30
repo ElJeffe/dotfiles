@@ -10,6 +10,7 @@ alias d='dirs -v'
 alias h='history 24'
 alias j='jobs -l'
 alias reload='source $HOME/.zshrc'
+alias r='source $HOME/.zshrc'
 alias vi=vim
 alias -- -='popd'
 # Implementations of ls vary wildly
