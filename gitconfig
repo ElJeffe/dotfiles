@@ -1,15 +1,24 @@
 [user]
 	name = Jef Steelant
-	email = jef@steelant.be
+	email = steelj99@cisco.com
 [alias]
   co = checkout
 [pager]
   diff =
 [giggle]
 	main-window-maximized = true
-	main-window-geometry = 0x0+0+0
+	main-window-geometry = 967x774+417+218
 	history-view-vpane-position = 284
 	file-view-vpane-position = 603
 	main-window-view = HistoryView
 [push]
-	default = simple
+	default = matching
+[http]
+  proxy = http://proxy.esl.cisco.com:8080
+[core]
+	preloadindex = true
+  fsyncobjectfiles = true
+  excludefile = ~/.gitignore
+[color]
+  ui = auto
+

@@ -4,7 +4,7 @@ export DCM_IP=
 
 setDcmIp()
 {
-  DCM_IP_FILE="/home/steelj99/Projects/DCM_IP"
+  DCM_IP_FILE="$HOME/Projects/DCM_IP"
   if [[ -f $DCM_IP_FILE ]]
   then
     export DCM_IP=$(cat $DCM_IP_FILE)
@@ -12,26 +12,34 @@ setDcmIp()
   fi
 }
 
-if [[ "$HOST" == "lnx-kjk-11" || "$HOST" == "sabekorlnx05" || "$HOST" == "sabekorlnx06" || "$HOST" == "sabekorlnx07" ]]
+if [[ "$HOST" == "lnx-kjk-11" || "$HOST" == "sabekorlnx"* || "$HOST" == "gpk-ads"* ]]
 then
   setDcmIp
-  PATH=/home/steelj99/slickedit17/bin:/home/steelj99/binlocal:$PATH
   alias runr='echo "Running:\n$(grep "^rt" rtconfig.txt)\nOn $DCM_IP\nPress Enter to continue..." && read && ./run.py $DCM_IP putoncefile nosettings noxml local'
   alias run='runr noreboot'
-  alias vncserver='vncserver -dpi 75 -geometry 1600x1150 -name '$HOST
-  alias k='pkill -9 -f makeflash -u steelj99;pkill -9 -f pretty_make -u steelj99'
-  alias nk='konsole --script > /dev/null 2>&1 &'
   alias make='make -j8'
   alias gdb='ppc_440-gdb'
   alias vgStrip='ppc_440-objcopy -R .debug_str -R .debug_info -R .debug_macinfo DCM_IO DCM_IO-vg'
   alias makemfp='make -j8 CONFIG=build/mfp-default-config'
   alias makedcm='make -j8 CONFIG=build/dcm-default-config'
+  alias syncfs='touch .sdgsgdsdglk;rm .sdgsgdsdglk'
   # make all upload
   alias mau='makemfp upload && makedcm upload'
-  export CVSROOT=:pserver:steelj99@sabekorlnx02:/home/cvs/db
-  source /usr/local/bin/ChangeMV -q 4
+  CVSROOT=:pserver:$USER@sabekorlnx02:/home/cvs/db
   #xmodmap ./.xmodmap
 
+fi
+if [[ "$HOST" == "lnx-kjk-11" || "$HOST" == "sabekorlnx"* ]]
+then
+  PATH=/home/steelj99/slickedit17/bin:/home/steelj99/binlocal:$PATH
+  alias vncserver='vncserver -dpi 75 -geometry 1600x1150 -name '$HOST
+  source /usr/local/bin/ChangeMV -q 4
+fi
+if [[ "$HOST" == "gpk-ads"* ]]
+then
+  source /auto/kjk_esw/usr/local/bin/ChangeMV -q 4
+  PATH=/ws/steelj99-gpk/slickedit/bin:$PATH
+  export PS1 RPS1 PAGER CVSROOT MANPATH PKG_CONFIG_PATH MVARCH MV MVHOST MVBIN MVDEV
 fi
 if [[ "$HOST" == "steelj" ]]
 then
@@ -59,9 +67,13 @@ if [[ "$HOST" == "arch" ]]
 then
   setDcmIp
   export CVSROOT=:pserver:steelj99@embedded-kjk.cisco.com:/home/cvs/db
-  PATH=/opt/slickedit/bin:$PATH:$HOME/bin/ServerScripts.git
+  PATH=/opt/slickedit/bin:$PATH
   alias run='checkDcmIp && ./run.py $DCM_IP noreboot nosettings noxml'
   alias runr='checkDcmIp && ./run.py $DCM_IP nosettings noxml'
-  alias connectLoop='while [ true ]; do ssh $DCM_IP; sleep 5; done'
+fi
+if [[ "$HOST" == "arch" || "$HOST" == "sabekorlnx"* || "$HOST" == "gpk-ads"* ]]
+then
+  alias connectLoop='while [ true ]; do connect.sh -n; sleep 5; done'
   alias rs='setDcm.py; reload'
+  alias syncfs='touch .sdgsgdsdglk;rm .sdgsgdsdglk'
 fi

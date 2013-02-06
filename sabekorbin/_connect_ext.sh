@@ -2,6 +2,7 @@
 
 source $(dirname $0)/_tabs.sh
 
+
 if [[ $# -eq 0 ]] ; then
     echo Usage: 
     echo $0 ip-addr 0
@@ -12,6 +13,14 @@ if [[ $# -eq 0 ]] ; then
     echo to connect to a transrater board
     exit
 fi;  
+
+notab=0
+if [[ $1 == "notab" ]]
+then
+  notab=1
+  shift
+fi
+
 ip=$1;
 short_ip=$ip;
 if [[ $ip =~ "10\.48\.(.*)" ]]

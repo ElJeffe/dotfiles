@@ -12,6 +12,7 @@ alias j='jobs -l'
 alias reload='source $HOME/.zshrc'
 alias r='source $HOME/.zshrc'
 alias vi=vim
+alias rk='ssh-keygen -R'
 alias -- -='popd'
 # Implementations of ls vary wildly
 case $OSTYPE in
