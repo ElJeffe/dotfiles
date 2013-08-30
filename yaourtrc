@@ -1,7 +1,6 @@
 AURUPGRADE=1
 COLORMODE="lightbg"
 EDITFILES=0
-PACMAN=pacman-color
 #YAOURT_COLORS="other=0;35:testing=0;31:core=0;31:extra=0;32:local=0;33:installed=0;33;7:votes=0;33;7:od=0;33;7:RED=0;31:GREEN=0;32:YELLOW=0;33:BLUE=0;34:PURPLE=0;35:CYAN=0;36"
 YAOURT_COLORS="no=0:other=0;35:testing=0;31:core=0;31:extra=0;32:local=0;33:nb=7;35:pkg=1:installed=0;35;7:votes=0;33;7:od=0;31;4:ver=0;34:lver=0;35;7:grp=0;34:dsc=0;34"
 EXPORT=2

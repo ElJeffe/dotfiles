@@ -85,7 +85,7 @@ set shiftwidth=2
 set expandtab
 filetype on
 :nnoremap <silent> <F8> :Tlist <CR>
-set ignorecase
+set smartcase
 set nu
 set cursorline
 :vnoremap * y/<C-R>"<CR>
@@ -141,3 +141,13 @@ if $TERM == 'screen'
   set term=xterm
 endif
 
+" colors
+" blue on green
+" hi DiffAdd        ctermfg=4 ctermbg=2
+" grey bg
+hi DiffAdd         ctermbg=7
+" yellow on green
+hi DiffChange     ctermfg=4 ctermbg=2
+hi DiffDelete     ctermfg=4 ctermbg=6
+" white on green
+hi DiffText       ctermfg=7 ctermbg=2

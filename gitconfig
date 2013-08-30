@@ -3,6 +3,7 @@
 	email = steelj99@cisco.com
 [alias]
   co = checkout
+  meld = !/home/steelj99/bin/git-meld.pl
 [pager]
   diff =
 [giggle]
